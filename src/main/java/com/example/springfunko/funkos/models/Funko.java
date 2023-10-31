@@ -42,11 +42,11 @@ public class Funko {
     private String imagen;
 
     @Builder.Default
-    @Column(nullable = false)
+    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDate fechaCreacion = LocalDate.now();
 
     @Builder.Default
-    @Column(nullable = false)
+    @Column(updatable = true, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDate fechaActualizacion = LocalDate.now();
 
     @ManyToOne
