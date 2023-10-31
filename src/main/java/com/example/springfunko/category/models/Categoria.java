@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
@@ -18,4 +20,10 @@ public class Categoria {
     Long id;
     @Column(nullable = false)
     String name;
+    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Builder.Default
+    LocalDateTime createdAt = LocalDateTime.now();
+    @Column(updatable = true, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    @Builder.Default
+    LocalDateTime updatedAt = LocalDateTime.now();
 }

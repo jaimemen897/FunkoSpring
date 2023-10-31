@@ -24,18 +24,31 @@ public class Funko {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotBlank(message = "El nombre no puede estar vacio")
+    @Column(nullable = false)
     private String nombre;
+
     @Min(value = 0, message = "El precio no puede ser negativo")
+    @Column(nullable = false)
     private double precio;
+
     @Min(value = 0, message = "la cantidad no puede ser negativo")
+    @Column(nullable = false)
     private int cantidad;
+
     @NotEmpty
+    @Column(nullable = false)
     private String imagen;
+
     @Builder.Default
+    @Column(nullable = false)
     private LocalDate fechaCreacion = LocalDate.now();
+
     @Builder.Default
+    @Column(nullable = false)
     private LocalDate fechaActualizacion = LocalDate.now();
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Categoria categoria;
