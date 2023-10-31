@@ -7,6 +7,7 @@ import com.example.springfunko.funkos.services.FunkoServiceImpl;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.util.Map;
 
 @RequestMapping("/api/funkos")
 @RestController
+@Slf4j
 public class FunkoRestController {
 
     private final FunkoServiceImpl funkoService;

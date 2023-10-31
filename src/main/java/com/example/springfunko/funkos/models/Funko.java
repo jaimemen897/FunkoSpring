@@ -1,12 +1,10 @@
 package com.example.springfunko.funkos.models;
 
 import com.example.springfunko.category.models.Categoria;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,12 +32,11 @@ public class Funko {
     private int cantidad;
     @NotEmpty
     private String imagen;
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Categoria categoria;
     @Builder.Default
     private LocalDate fechaCreacion = LocalDate.now();
     @Builder.Default
     private LocalDate fechaActualizacion = LocalDate.now();
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Categoria categoria;
 }

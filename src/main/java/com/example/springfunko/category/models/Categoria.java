@@ -16,5 +16,6 @@ public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    @Column(nullable = false)
     String name;
 }
