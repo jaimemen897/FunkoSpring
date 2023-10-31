@@ -21,4 +21,7 @@ public interface CategoryRepository extends JpaRepository<Categoria, Long> {
 
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM Funko p WHERE p.categoria.id = :id")
     Boolean existsFunkoById(Long id);
+
+    @Query("SELECT p.id FROM Categoria p WHERE p.name = :name")
+    Optional<Long> getIdByName(String name);
 }

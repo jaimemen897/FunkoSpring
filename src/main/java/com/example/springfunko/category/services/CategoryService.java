@@ -6,9 +6,7 @@ import com.example.springfunko.category.models.Categoria;
 import java.util.List;
 
 public interface CategoryService {
-    List<Categoria> findAll();
-
-    List<Categoria> findByName(String name);
+    List<Categoria> findAll(String name);
 
     Categoria findById(Long id);
 

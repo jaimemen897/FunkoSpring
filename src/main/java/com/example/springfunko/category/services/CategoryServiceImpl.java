@@ -15,6 +15,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -30,34 +31,40 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     @Override
-    public List<Categoria> findAll() {
-        log.info("Buscando todas las categorias");
-        return categoryRepository.findAll();
+    public List<Categoria> findAll(String name) {
+        if (name == null || name.isEmpty() ) {
+            log.info("Buscando todas las categorias");
+            return categoryRepository.findAll();
+        } else {
+            log.info("Buscando categorias por nombre");
+            return categoryRepository.findByName(name).orElseThrow(() -> new CategoryNotFound("Categoria no encontrada"));
+        }
     }
 
     @Override
-    public List<Categoria> findByName(String name) {
-        log.info("Buscando categorias por nombre");
-        return categoryRepository.findByName(name).orElseThrow(() -> new CategoryNotFound("Categoria no encontrada"));
-    }
-
-    @Override
-    @Cacheable(key = "#id")
+    @Cacheable
     public Categoria findById(Long id) {
         log.info("Buscando categoria por id");
         return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFound("Categoria no encontrada"));
     }
 
     @Override
-    @Cacheable(key = "#result.id")
+    @Cacheable
     public Categoria save(CategoryResponseDto categoria) {
         log.info("Guardando categoria");
-        Categoria categoriaMapped = categoryMapper.toCategory(categoria);
-        return categoryRepository.save(categoriaMapped);
+        Optional<Long> id = categoryRepository.getIdByName(categoria.nombre());
+        System.out.println(id);
+        if (id.isPresent()) {
+            throw new CategoryConflict("Categoria ya existe");
+        } else {
+            Categoria categoriaMapped = categoryMapper.toCategory(categoria);
+            return categoryRepository.save(categoriaMapped);
+        }
+
     }
 
     @Override
-    @Cacheable(key = "#result.id")
+    @Cacheable
     public Categoria update(CategoryResponseDto categoria, Long id) {
         log.info("Actualizando categoria");
         Categoria categoryActual = findById(id);
@@ -65,13 +72,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @CacheEvict(key = "#id")
+    @CacheEvict
     @Transactional
     public void deleteById(Long id) {
         log.info("Eliminando categoria");
-        Categoria categoria = findById(id);
-        if (categoryRepository.existsFunkoById(id)){
-            throw new CategoryConflict("Categoria no puede ser eliminada porque tiene funkos asociados");
+        findById(id);
+        if (categoryRepository.existsFunkoById(id)) {
+            log.warn("Categoria no eliminada, tiene funkos asociados");
+            categoryRepository.updateIsDeletedToTrueById(id);
         } else {
             categoryRepository.deleteById(id);
         }

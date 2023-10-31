@@ -28,13 +28,8 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Categoria>> getAll() {
-        return ResponseEntity.ok(categoryService.findAll());
-    }
-
-    @GetMapping("/name")
-    public ResponseEntity<List<Categoria>> getByName(String name) {
-        return ResponseEntity.ok(categoryService.findByName(name));
+    public ResponseEntity<List<Categoria>> getAll(@RequestParam(required = false) String name) {
+        return ResponseEntity.ok(categoryService.findAll(name));
     }
 
     @GetMapping("/{id}")
@@ -44,7 +39,7 @@ public class CategoryController {
 
     @PostMapping()
     public ResponseEntity<Categoria> save(@Valid @RequestBody CategoryResponseDto categoria) {
-        return ResponseEntity.ok(categoryService.save(categoria));
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.save(categoria));
     }
 
     @PutMapping("/{id}")
