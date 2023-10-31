@@ -13,7 +13,8 @@ public class CategoryMapper {
                 null,
                 categoria.nombre(),
                 LocalDateTime.now(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                false
         );
     }
 
@@ -22,7 +23,8 @@ public class CategoryMapper {
                 categoria.getId(),
                 dto.nombre() != null ? dto.nombre() : categoria.getName(),
                 categoria.getCreatedAt(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                categoria.getIsDeleted() != null ? dto.isDeleted() : categoria.getIsDeleted()
         );
     }
 }

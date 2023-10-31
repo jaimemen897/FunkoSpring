@@ -26,4 +26,7 @@ public class Categoria {
     @Column(updatable = true, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     @Builder.Default
     LocalDateTime updatedAt = LocalDateTime.now();
+    @Column(columnDefinition = "boolean default false")
+    @Builder.Default
+    private Boolean isDeleted = false;
 }

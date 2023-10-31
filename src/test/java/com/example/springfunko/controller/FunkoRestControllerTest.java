@@ -1,5 +1,6 @@
 package com.example.springfunko.controller;
 
+import com.example.springfunko.category.models.Categoria;
 import com.example.springfunko.funkos.dto.FunkoCreateDto;
 import com.example.springfunko.funkos.dto.FunkoResponseDto;
 import com.example.springfunko.funkos.dto.FunkoUpdateDto;
@@ -35,22 +36,26 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 class FunkoRestControllerTest {
     private final ObjectMapper mapper = new ObjectMapper();
     private final String myEndpoint = "/api/funkos";
+    private final Categoria categoria1 = Categoria.builder().id(null).name("Disney").build();
+    private final Categoria categoria2 = Categoria.builder().id(null).name("Serie").build();
+
     private final Funko funko1 = Funko.builder()
             .id(1L)
             .nombre("nombre4")
             .precio(70.89)
             .cantidad(3)
+            .categoria(categoria1)
             .imagen("rutaImagen4")
-            .categoria("dc")
             .build();
     private final Funko funko2 = Funko.builder()
             .id(2L)
             .nombre("nombre5")
             .precio(54.52)
             .cantidad(1)
+            .categoria(categoria2)
             .imagen("rutaImagen5")
-            .categoria("disney")
             .build();
+
     @Autowired
     MockMvc mockMvc;
     @MockBean
@@ -172,7 +177,7 @@ class FunkoRestControllerTest {
 
     @Test
     void postFunko() throws Exception {
-        var funkoDto = new FunkoCreateDto("nombre4", 70.89, 3, "rutaImagen4", "dc");
+        var funkoDto = new FunkoCreateDto("nombre4", 70.89, 3, "rutaImagen4", categoria1);
         when(funkoService.save(funkoDto)).thenReturn(funko1);
         MockHttpServletResponse response = mockMvc.perform(
                         post(myEndpoint)
@@ -192,7 +197,7 @@ class FunkoRestControllerTest {
 
     @Test
     void postFunkoNotValidName() throws Exception {
-        var funkoDto = new FunkoCreateDto("", 70.89, 3, "rutaImagen4", "dc");
+        var funkoDto = new FunkoCreateDto("", 70.89, 3, "rutaImagen4", new Categoria());
         when(funkoService.save(funkoDto)).thenReturn(funko1);
         MockHttpServletResponse response = mockMvc.perform(
                         post(myEndpoint)
@@ -209,7 +214,7 @@ class FunkoRestControllerTest {
 
     @Test
     void postFunkoNotValidPrice() throws Exception {
-        var funkoDto = new FunkoCreateDto("nombre4", -70.89, 3, "rutaImagen4", "dc");
+        var funkoDto = new FunkoCreateDto("nombre4", -70.89, 3, "rutaImagen4", categoria1);
         when(funkoService.save(funkoDto)).thenReturn(funko1);
         MockHttpServletResponse response = mockMvc.perform(
                         post(myEndpoint)
@@ -226,7 +231,7 @@ class FunkoRestControllerTest {
 
     @Test
     void postFunkoNotValidCantidad() throws Exception {
-        var funkoDto = new FunkoCreateDto("nombre4", 70.89, -3, "rutaImagen4", "dc");
+        var funkoDto = new FunkoCreateDto("nombre4", 70.89, -3, "rutaImagen4", categoria1);
         when(funkoService.save(funkoDto)).thenReturn(funko1);
         MockHttpServletResponse response = mockMvc.perform(
                         post(myEndpoint)
@@ -243,7 +248,7 @@ class FunkoRestControllerTest {
 
     @Test
     void postFunkoNotValidImagen() throws Exception {
-        var funkoDto = new FunkoCreateDto("nombre4", 70.89, 3, null, "dc");
+        var funkoDto = new FunkoCreateDto("nombre4", 70.89, 3, null, categoria1);
         when(funkoService.save(funkoDto)).thenReturn(funko1);
         MockHttpServletResponse response = mockMvc.perform(
                         post(myEndpoint)
@@ -260,7 +265,7 @@ class FunkoRestControllerTest {
 
     @Test
     void postFunkoNotValidCategoria() throws Exception {
-        var funkoDto = new FunkoCreateDto("nombre4", 70.89, 3, "rutaImagen4", "");
+        var funkoDto = new FunkoCreateDto("nombre4", 70.89, 3, "rutaImagen4", null);
         when(funkoService.save(funkoDto)).thenReturn(funko1);
         MockHttpServletResponse response = mockMvc.perform(
                         post(myEndpoint)
@@ -279,7 +284,7 @@ class FunkoRestControllerTest {
     @Test
     void putFunko() throws Exception {
         var localEndPoint = myEndpoint + "/1";
-        var funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", "dc");
+        var funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", categoria1);
         when(funkoService.update(funkoDto, 1L)).thenReturn(funko1);
         MockHttpServletResponse response = mockMvc.perform(
                         put(localEndPoint)
@@ -301,7 +306,7 @@ class FunkoRestControllerTest {
     @Test
     void putFunkoNotFound() {
         var localEndPoint = myEndpoint + "/1";
-        var funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", "dc");
+        var funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", categoria1);
         when(funkoService.update(funkoDto, 1L)).thenThrow(new FunkoNotFound("Funko no encontrado"));
         assertAll(
                 () -> assertEquals(404, mockMvc.perform(
@@ -316,7 +321,7 @@ class FunkoRestControllerTest {
     @Test
     void patchFunko() throws Exception {
         var localEndPoint = myEndpoint + "/1";
-        var funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", "dc");
+        var funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", categoria1);
         when(funkoService.update(funkoDto, 1L)).thenReturn(funko1);
         MockHttpServletResponse response = mockMvc.perform(
                         patch(localEndPoint)
@@ -339,7 +344,7 @@ class FunkoRestControllerTest {
     @Test
     void patchFunkoNotFound() {
         var localEndPoint = myEndpoint + "/1";
-        var funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", "dc");
+        var funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", categoria1);
         when(funkoService.update(funkoDto, 1L)).thenThrow(new FunkoNotFound("Funko no encontrado"));
         assertAll(
                 () -> assertEquals(404, mockMvc.perform(
