@@ -42,8 +42,6 @@ class FunkoRepositoryImplTest {
 
     @BeforeEach
     void setUp() {
-        funkoRepository.deleteAll();
-
         entityManager.merge(categoria1);
         entityManager.merge(categoria2);
         entityManager.flush();

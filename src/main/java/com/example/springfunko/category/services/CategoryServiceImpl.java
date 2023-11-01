@@ -37,7 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
             return categoryRepository.findAll();
         } else {
             log.info("Buscando categorias por nombre");
-            return categoryRepository.findByName(name).orElseThrow(() -> new CategoryNotFound("Categoria no encontrada"));
+            return categoryRepository.findAllByNameContainingIgnoreCase(name).orElseThrow(() -> new CategoryNotFound("Categoria no encontrada"));
         }
     }
 
