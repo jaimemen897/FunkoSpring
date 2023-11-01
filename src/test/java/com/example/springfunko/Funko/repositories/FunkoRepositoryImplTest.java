@@ -1,4 +1,4 @@
-package com.example.springfunko.repositories;
+package com.example.springfunko.Funko.repositories;
 
 import com.example.springfunko.category.models.Categoria;
 import com.example.springfunko.funkos.models.Funko;

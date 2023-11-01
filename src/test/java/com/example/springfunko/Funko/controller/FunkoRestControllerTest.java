@@ -1,4 +1,4 @@
-package com.example.springfunko.controller;
+package com.example.springfunko.Funko.controller;
 
 import com.example.springfunko.category.models.Categoria;
 import com.example.springfunko.funkos.dto.FunkoCreateDto;

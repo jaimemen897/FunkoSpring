@@ -23,8 +23,6 @@ class CategoryRepositoryTest {
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
-    private FunkoRepository funkoRepository;
-    @Autowired
     private TestEntityManager entityManager;
 
     @BeforeEach
