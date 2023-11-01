@@ -53,7 +53,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Categoria save(CategoryResponseDto categoria) {
         log.info("Guardando categoria");
         Optional<Long> id = categoryRepository.getIdByName(categoria.nombre());
-        System.out.println(id);
+
         if (id.isPresent()) {
             throw new CategoryConflict("Categoria ya existe");
         } else {
@@ -68,7 +68,8 @@ public class CategoryServiceImpl implements CategoryService {
     public Categoria update(CategoryResponseDto categoria, Long id) {
         log.info("Actualizando categoria");
         Categoria categoryActual = findById(id);
-        return categoryRepository.save(categoryActual);
+        Categoria categoriaToSave =  categoryMapper.toCategory(categoria, categoryActual);
+        return categoryRepository.save(categoriaToSave);
     }
 
     @Override
@@ -76,10 +77,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public void deleteById(Long id) {
         log.info("Eliminando categoria");
-        findById(id);
+        this.findById(id);
         if (categoryRepository.existsFunkoById(id)) {
             log.warn("Categoria no eliminada, tiene funkos asociados");
-            categoryRepository.updateIsDeletedToTrueById(id);
+            throw new CategoryConflict("Categoria no eliminada, tiene funkos asociados");
         } else {
             categoryRepository.deleteById(id);
         }

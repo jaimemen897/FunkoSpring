@@ -12,7 +12,4 @@ public interface FunkoRepository extends JpaRepository<Funko, Long> {
     List<Funko> findAllByCategoriaName(String categoria);
 
     List<Funko> findAllByNombreAndCategoriaName(String nombre, String categoria);
-
-    @Query(value = "SELECT id FROM Funko ORDER BY id DESC LIMIT 1", nativeQuery = true)
-    Long findTopByOrderByIdDesc();
 }
