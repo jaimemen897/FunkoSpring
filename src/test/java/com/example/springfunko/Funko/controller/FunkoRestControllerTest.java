@@ -206,7 +206,6 @@ class FunkoRestControllerTest {
                                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
-
         assertAll(
                 () -> assertEquals(400, response.getStatus())
         );

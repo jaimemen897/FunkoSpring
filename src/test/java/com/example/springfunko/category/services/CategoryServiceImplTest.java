@@ -1,6 +1,7 @@
 package com.example.springfunko.category.services;
 
 import com.example.springfunko.category.dto.CategoryResponseDto;
+import com.example.springfunko.category.exception.CategoryConflict;
 import com.example.springfunko.category.exception.CategoryNotFound;
 import com.example.springfunko.category.mappers.CategoryMapper;
 import com.example.springfunko.category.models.Categoria;
@@ -98,6 +99,18 @@ class CategoryServiceImplTest {
     }
 
     @Test
+    void saveAlreadyExist(){
+        CategoryResponseDto categoryResponseDto = new CategoryResponseDto("Disney", false);
+
+        when(categoryRepository.getIdByName("Disney")).thenReturn(Optional.of(1L));
+
+        var res = assertThrows(CategoryConflict.class, () -> categoryService.save(categoryResponseDto));
+        assertEquals("Categoria ya existe", res.getMessage());
+
+        verify(categoryRepository, times(1)).getIdByName("Disney");
+    }
+
+    @Test
     void update() {
         Categoria expectedCategory = Categoria.builder().name("Disney").build();
         Categoria categoryToUpdate = Categoria.builder().name("Disney").build();
@@ -120,5 +133,15 @@ class CategoryServiceImplTest {
         categoryService.deleteById(1L);
         verify(categoryRepository, times(1)).findById(1L);
         verify(categoryRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void deleteByIdContainsFunkos(){
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(categoria));
+        when(categoryRepository.existsFunkoById(1L)).thenReturn(true);
+        var res = assertThrows(CategoryConflict.class, () -> categoryService.deleteById(1L));
+        assertEquals("Categoria no eliminada, tiene funkos asociados", res.getMessage());
+        verify(categoryRepository, times(1)).findById(1L);
+        verify(categoryRepository, times(1)).existsFunkoById(1L);
     }
 }
