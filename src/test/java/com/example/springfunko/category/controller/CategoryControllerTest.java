@@ -1,9 +1,9 @@
 package com.example.springfunko.category.controller;
 
-import com.example.springfunko.category.dto.CategoryResponseDto;
-import com.example.springfunko.category.exception.CategoryNotFound;
-import com.example.springfunko.category.models.Categoria;
-import com.example.springfunko.category.services.CategoryService;
+import com.example.springfunko.rest.category.dto.CategoryResponseDto;
+import com.example.springfunko.rest.category.exception.CategoryNotFound;
+import com.example.springfunko.rest.category.models.Categoria;
+import com.example.springfunko.rest.category.services.CategoryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;

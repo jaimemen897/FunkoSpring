@@ -1,10 +1,10 @@
 package com.example.springfunko.Funko.mapper;
 
-import com.example.springfunko.category.models.Categoria;
-import com.example.springfunko.funkos.dto.FunkoCreateDto;
-import com.example.springfunko.funkos.dto.FunkoUpdateDto;
-import com.example.springfunko.funkos.mapper.FunkoMapper;
-import com.example.springfunko.funkos.models.Funko;
+import com.example.springfunko.rest.category.models.Categoria;
+import com.example.springfunko.rest.funkos.dto.FunkoCreateDto;
+import com.example.springfunko.rest.funkos.dto.FunkoUpdateDto;
+import com.example.springfunko.rest.funkos.mapper.FunkoMapper;
+import com.example.springfunko.rest.funkos.models.Funko;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertAll;

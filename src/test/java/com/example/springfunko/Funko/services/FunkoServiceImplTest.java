@@ -1,13 +1,13 @@
 package com.example.springfunko.Funko.services;
 
-import com.example.springfunko.category.models.Categoria;
-import com.example.springfunko.funkos.dto.FunkoCreateDto;
-import com.example.springfunko.funkos.dto.FunkoUpdateDto;
-import com.example.springfunko.funkos.exception.FunkoNotFound;
-import com.example.springfunko.funkos.mapper.FunkoMapper;
-import com.example.springfunko.funkos.models.Funko;
-import com.example.springfunko.funkos.repositories.FunkoRepository;
-import com.example.springfunko.funkos.services.FunkoServiceImpl;
+import com.example.springfunko.rest.category.models.Categoria;
+import com.example.springfunko.rest.funkos.dto.FunkoCreateDto;
+import com.example.springfunko.rest.funkos.dto.FunkoUpdateDto;
+import com.example.springfunko.rest.funkos.exception.FunkoNotFound;
+import com.example.springfunko.rest.funkos.mapper.FunkoMapper;
+import com.example.springfunko.rest.funkos.models.Funko;
+import com.example.springfunko.rest.funkos.repositories.FunkoRepository;
+import com.example.springfunko.rest.funkos.services.FunkoServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

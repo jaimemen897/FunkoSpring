@@ -1,12 +1,12 @@
 package com.example.springfunko.Funko.controller;
 
-import com.example.springfunko.category.models.Categoria;
-import com.example.springfunko.funkos.dto.FunkoCreateDto;
-import com.example.springfunko.funkos.dto.FunkoResponseDto;
-import com.example.springfunko.funkos.dto.FunkoUpdateDto;
-import com.example.springfunko.funkos.exception.FunkoNotFound;
-import com.example.springfunko.funkos.models.Funko;
-import com.example.springfunko.funkos.services.FunkoServiceImpl;
+import com.example.springfunko.rest.category.models.Categoria;
+import com.example.springfunko.rest.funkos.dto.FunkoCreateDto;
+import com.example.springfunko.rest.funkos.dto.FunkoResponseDto;
+import com.example.springfunko.rest.funkos.dto.FunkoUpdateDto;
+import com.example.springfunko.rest.funkos.exception.FunkoNotFound;
+import com.example.springfunko.rest.funkos.models.Funko;
+import com.example.springfunko.rest.funkos.services.FunkoServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;

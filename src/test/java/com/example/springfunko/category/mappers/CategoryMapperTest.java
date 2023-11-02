@@ -1,7 +1,8 @@
 package com.example.springfunko.category.mappers;
 
-import com.example.springfunko.category.dto.CategoryResponseDto;
-import com.example.springfunko.category.models.Categoria;
+import com.example.springfunko.rest.category.dto.CategoryResponseDto;
+import com.example.springfunko.rest.category.mappers.CategoryMapper;
+import com.example.springfunko.rest.category.models.Categoria;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

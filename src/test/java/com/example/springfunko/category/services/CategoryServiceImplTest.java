@@ -1,14 +1,12 @@
 package com.example.springfunko.category.services;
 
-import com.example.springfunko.category.dto.CategoryResponseDto;
-import com.example.springfunko.category.exception.CategoryConflict;
-import com.example.springfunko.category.exception.CategoryNotFound;
-import com.example.springfunko.category.mappers.CategoryMapper;
-import com.example.springfunko.category.models.Categoria;
-import com.example.springfunko.category.repositories.CategoryRepository;
-import com.example.springfunko.funkos.dto.FunkoCreateDto;
-import com.example.springfunko.funkos.dto.FunkoResponseDto;
-import com.example.springfunko.funkos.models.Funko;
+import com.example.springfunko.rest.category.dto.CategoryResponseDto;
+import com.example.springfunko.rest.category.exception.CategoryConflict;
+import com.example.springfunko.rest.category.exception.CategoryNotFound;
+import com.example.springfunko.rest.category.mappers.CategoryMapper;
+import com.example.springfunko.rest.category.models.Categoria;
+import com.example.springfunko.rest.category.repositories.CategoryRepository;
+import com.example.springfunko.rest.category.services.CategoryServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

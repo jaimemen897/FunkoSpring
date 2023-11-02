@@ -1,15 +1,15 @@
 package com.example.springfunko.category.repositories;
 
-import com.example.springfunko.category.models.Categoria;
-import com.example.springfunko.funkos.models.Funko;
-import com.example.springfunko.funkos.repositories.FunkoRepository;
-import jakarta.persistence.EntityManager;
+import com.example.springfunko.rest.category.models.Categoria;
+import com.example.springfunko.rest.category.repositories.CategoryRepository;
+import com.example.springfunko.rest.funkos.models.Funko;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 class CategoryRepositoryTest {
     private final Categoria categoria = Categoria.builder()
+            .id(1L)
             .name("Marvel")
             .build();
     @Autowired
@@ -40,30 +41,34 @@ class CategoryRepositoryTest {
         );
     }
 
-    /*@Test
+    @Test
     void existsFunkoById() {
-        Funko funko1 = Funko.builder()
+        Funko funko = Funko.builder()
                 .id(1L)
-                .nombre("nombre4")
-                .precio(70.89)
-                .cantidad(3)
+                .nombre("Funko 1")
+                .precio(100.0)
+                .cantidad(10)
+                .imagen("ruta")
+                .fechaCreacion(LocalDate.now())
+                .fechaActualizacion(LocalDate.now())
                 .categoria(categoria)
-                .imagen("rutaImagen4")
                 .build();
-        entityManager.merge(funko1);
+        entityManager.merge(funko);
         entityManager.flush();
+        Boolean exists = categoryRepository.existsFunkoById(1L);
         assertAll(
-                () -> assertTrue(categoryRepository.existsFunkoById(categoria.getId())),
-                () -> assertFalse(categoryRepository.existsFunkoById(14L))
+                () -> assertNotNull(exists),
+                () -> assertTrue(exists)
         );
     }
+
 
     @Test
     void getIdByName() {
         Optional<Long> id = categoryRepository.getIdByName("Marvel");
         assertAll(
                 () -> assertTrue(id.isPresent()),
-                () -> assertEquals(13L, id.get())
+                () -> assertEquals(1L, id.get())
         );
-    }*/
+    }
 }

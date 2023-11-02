@@ -1,8 +1,8 @@
 package com.example.springfunko.Funko.repositories;
 
-import com.example.springfunko.category.models.Categoria;
-import com.example.springfunko.funkos.models.Funko;
-import com.example.springfunko.funkos.repositories.FunkoRepository;
+import com.example.springfunko.rest.category.models.Categoria;
+import com.example.springfunko.rest.funkos.models.Funko;
+import com.example.springfunko.rest.funkos.repositories.FunkoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
