@@ -20,8 +20,11 @@ import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -55,6 +58,7 @@ class FunkoRestControllerTest {
             .categoria(categoria2)
             .imagen("rutaImagen5")
             .build();
+    FunkoResponseDto funkoResponseDto = new FunkoResponseDto(1L, "nombre4", 70.89, 3, "rutaImagen4", categoria1, LocalDate.now(), LocalDate.now());
 
     @Autowired
     MockMvc mockMvc;
@@ -100,7 +104,7 @@ class FunkoRestControllerTest {
     }
 
     @Test
-    void getAllProductosByCategoria() throws Exception {
+    void getAllFunkosByCategoria() throws Exception {
         var funkoList = List.of(funko2);
         var localEndPoint = myEndpoint + "?categoria=disney";
         when(funkoService.findAll(null, "disney")).thenReturn(funkoList);
@@ -178,7 +182,8 @@ class FunkoRestControllerTest {
     @Test
     void postFunko() throws Exception {
         var funkoDto = new FunkoCreateDto("nombre4", 70.89, 3, "rutaImagen4", categoria1);
-        when(funkoService.save(funkoDto)).thenReturn(funko1);
+
+        when(funkoService.save(funkoDto)).thenReturn(funkoResponseDto);
         MockHttpServletResponse response = mockMvc.perform(
                         post(myEndpoint)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -198,7 +203,9 @@ class FunkoRestControllerTest {
     @Test
     void postFunkoNotValidName() throws Exception {
         var funkoDto = new FunkoCreateDto("", 70.89, 3, "rutaImagen4", new Categoria());
-        when(funkoService.save(funkoDto)).thenReturn(funko1);
+        FunkoResponseDto funkoResponseDto = new FunkoResponseDto(1L, "nombre4", 70.89, 3, "rutaImagen4", categoria1, LocalDate.now(), LocalDate.now());
+
+
         MockHttpServletResponse response = mockMvc.perform(
                         post(myEndpoint)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -214,7 +221,7 @@ class FunkoRestControllerTest {
     @Test
     void postFunkoNotValidPrice() throws Exception {
         var funkoDto = new FunkoCreateDto("nombre4", -70.89, 3, "rutaImagen4", categoria1);
-        when(funkoService.save(funkoDto)).thenReturn(funko1);
+
         MockHttpServletResponse response = mockMvc.perform(
                         post(myEndpoint)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -231,7 +238,7 @@ class FunkoRestControllerTest {
     @Test
     void postFunkoNotValidCantidad() throws Exception {
         var funkoDto = new FunkoCreateDto("nombre4", 70.89, -3, "rutaImagen4", categoria1);
-        when(funkoService.save(funkoDto)).thenReturn(funko1);
+
         MockHttpServletResponse response = mockMvc.perform(
                         post(myEndpoint)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -248,7 +255,7 @@ class FunkoRestControllerTest {
     @Test
     void postFunkoNotValidImagen() throws Exception {
         var funkoDto = new FunkoCreateDto("nombre4", 70.89, 3, null, categoria1);
-        when(funkoService.save(funkoDto)).thenReturn(funko1);
+
         MockHttpServletResponse response = mockMvc.perform(
                         post(myEndpoint)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -265,7 +272,7 @@ class FunkoRestControllerTest {
     @Test
     void postFunkoNotValidCategoria() throws Exception {
         var funkoDto = new FunkoCreateDto("nombre4", 70.89, 3, "rutaImagen4", null);
-        when(funkoService.save(funkoDto)).thenReturn(funko1);
+
         MockHttpServletResponse response = mockMvc.perform(
                         post(myEndpoint)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -284,7 +291,7 @@ class FunkoRestControllerTest {
     void putFunko() throws Exception {
         var localEndPoint = myEndpoint + "/1";
         var funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", categoria1);
-        when(funkoService.update(funkoDto, 1L)).thenReturn(funko1);
+        when(funkoService.update(funkoDto, 1L)).thenReturn(funkoResponseDto);
         MockHttpServletResponse response = mockMvc.perform(
                         put(localEndPoint)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -321,13 +328,16 @@ class FunkoRestControllerTest {
     void patchFunko() throws Exception {
         var localEndPoint = myEndpoint + "/1";
         var funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", categoria1);
-        when(funkoService.update(funkoDto, 1L)).thenReturn(funko1);
+
+        when(funkoService.update(funkoDto, 1L)).thenReturn(funkoResponseDto);
+
         MockHttpServletResponse response = mockMvc.perform(
                         patch(localEndPoint)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(jsonFunko.write(funko1).getJson())
                                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
+
         FunkoResponseDto res = mapper.readValue(response.getContentAsString(), FunkoResponseDto.class);
         assertAll(
                 () -> assertEquals(200, response.getStatus()),
@@ -344,6 +354,7 @@ class FunkoRestControllerTest {
     void patchFunkoNotFound() {
         var localEndPoint = myEndpoint + "/1";
         var funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", categoria1);
+
         when(funkoService.update(funkoDto, 1L)).thenThrow(new FunkoNotFound("Funko no encontrado"));
         assertAll(
                 () -> assertEquals(404, mockMvc.perform(
@@ -355,6 +366,41 @@ class FunkoRestControllerTest {
         );
     }
 
+    @Test
+    void patchFunkoImage() throws Exception {
+        var localEndPoint = myEndpoint + "/imagen/1";
+
+        when(funkoService.updateImage(anyLong(), any(MultipartFile.class))).thenReturn(funko1);
+
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "filename.jpg",
+                MediaType.IMAGE_JPEG_VALUE,
+                "Contenido del archivo".getBytes()
+        );
+
+        MockHttpServletResponse response = mockMvc.perform(
+                        multipart(localEndPoint)
+                                .file(file)
+                                .with(req -> {
+                                    req.setMethod("PATCH");
+                                    return req;
+                                })
+                                .accept(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+        Funko res = mapper.readValue(response.getContentAsString(), Funko.class);
+
+        assertAll(
+                () -> assertEquals(200, response.getStatus()),
+                () -> assertEquals(funko1.getNombre(), res.getNombre()),
+                () -> assertEquals(funko1.getPrecio(), res.getPrecio()),
+                () -> assertEquals(funko1.getCantidad(), res.getCantidad()),
+                () -> assertEquals(funko1.getImagen(), res.getImagen()),
+                () -> assertEquals(funko1.getCategoria(), res.getCategoria())
+        );
+
+        verify(funkoService, times(1)).updateImage(anyLong(), any(MultipartFile.class));
+    }
 
     @Test
     void deleteFunko() throws Exception {

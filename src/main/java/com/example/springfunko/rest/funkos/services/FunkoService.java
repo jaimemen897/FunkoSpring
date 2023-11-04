@@ -1,6 +1,7 @@
 package com.example.springfunko.rest.funkos.services;
 
 import com.example.springfunko.rest.funkos.dto.FunkoCreateDto;
+import com.example.springfunko.rest.funkos.dto.FunkoResponseDto;
 import com.example.springfunko.rest.funkos.dto.FunkoUpdateDto;
 import com.example.springfunko.rest.funkos.models.Funko;
 
@@ -11,9 +12,9 @@ public interface FunkoService {
 
     Funko findById(long id);
 
-    Funko save(FunkoCreateDto funko);
+    FunkoResponseDto save(FunkoCreateDto funko);
 
-    Funko update(FunkoUpdateDto funko, Long id);
+    FunkoResponseDto update(FunkoUpdateDto funko, Long id);
 
     void deleteById(long id);
 }

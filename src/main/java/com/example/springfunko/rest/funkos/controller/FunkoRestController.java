@@ -1,10 +1,10 @@
 package com.example.springfunko.rest.funkos.controller;
 
 import com.example.springfunko.rest.funkos.dto.FunkoCreateDto;
+import com.example.springfunko.rest.funkos.dto.FunkoResponseDto;
 import com.example.springfunko.rest.funkos.dto.FunkoUpdateDto;
 import com.example.springfunko.rest.funkos.models.Funko;
 import com.example.springfunko.rest.funkos.services.FunkoServiceImpl;
-import com.example.springfunko.rest.storage.services.StorageService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.NonNull;
@@ -17,7 +17,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,13 +59,19 @@ public class FunkoRestController {
 
     @NonNull
     @PostMapping()
-    public ResponseEntity<Funko> postFunko(@Valid @RequestBody FunkoCreateDto funko) {
+    public ResponseEntity<FunkoResponseDto> postFunko(@Valid @RequestBody FunkoCreateDto funko) {
         return ResponseEntity.status(HttpStatus.CREATED).body(funkoService.save(funko));
     }
 
     @NonNull
     @PutMapping("/{id}")
-    public ResponseEntity<Funko> putFunko(@PathVariable Long id, @Valid @RequestBody FunkoUpdateDto funko) {
+    public ResponseEntity<FunkoResponseDto> putFunko(@PathVariable Long id, @Valid @RequestBody FunkoUpdateDto funko) {
+        return ResponseEntity.ok(funkoService.update(funko, id));
+    }
+
+    @NonNull
+    @PatchMapping("/{id}")
+    public ResponseEntity<FunkoResponseDto> patchFunko(@PathVariable Long id, @Valid @RequestBody FunkoUpdateDto funko) {
         return ResponseEntity.ok(funkoService.update(funko, id));
     }
 

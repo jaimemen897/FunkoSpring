@@ -43,6 +43,11 @@ public class FileSystemStorageService implements StorageService {
             if (file.isEmpty()) {
                 throw new StorageBadRequest("Fichero vacío " + filename);
             }
+            //si pesa mas de 10 MB
+            if (file.getSize() > 10485760) {
+                throw new StorageBadRequest("Fichero demasiado grande " + filename);
+            }
+
             if (filename.contains("..")) {
                 // This is a security check
                 throw new StorageBadRequest(

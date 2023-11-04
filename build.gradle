@@ -33,7 +33,10 @@ dependencies {
 	// Para pasar a XML los responses, negocacion de contenido
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'com.h2database:h2'
+	implementation 'org.springframework.boot:spring-boot-devtools:3.1.5'
+
 
 }
 

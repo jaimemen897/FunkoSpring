@@ -19,7 +19,7 @@ class FunkoMapperTest {
         Long id = 1L;
         FunkoCreateDto funkoCreateDto = new FunkoCreateDto("nombre", 54.52, 1, "rutaImagen", categoria1);
 
-        var res = funkoMapper.toFunko(funkoCreateDto);
+        var res = funkoMapper.toFunko(funkoCreateDto, categoria1);
 
         assertAll(
                 () -> assertEquals(funkoCreateDto.nombre(), res.getNombre()),
@@ -44,7 +44,7 @@ class FunkoMapperTest {
                 .categoria(categoria1)
                 .build();
 
-        var res = funkoMapper.toFunko(funkoCreateDto, funko);
+        var res = funkoMapper.toFunko(funkoCreateDto, funko, categoria1);
 
         assertAll(
                 () -> assertEquals(id, res.getId()),

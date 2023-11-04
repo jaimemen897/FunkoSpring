@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Categoria, Long>{
+public interface CategoryRepository extends JpaRepository<Categoria, Long> {
     Optional<List<Categoria>> findAllByNameContainingIgnoreCase(String name);
+
+    Optional<Categoria> findByNameContainingIgnoreCase(String name);
 
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM Funko p WHERE p.categoria.id = :id")
     Boolean existsFunkoById(Long id);
