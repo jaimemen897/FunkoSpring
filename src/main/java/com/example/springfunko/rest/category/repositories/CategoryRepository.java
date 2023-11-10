@@ -2,6 +2,7 @@ package com.example.springfunko.rest.category.repositories;
 
 import com.example.springfunko.rest.category.models.Categoria;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Categoria, Long> {
+public interface CategoryRepository extends JpaRepository<Categoria, Long>, JpaSpecificationExecutor<Categoria> {
     Optional<List<Categoria>> findAllByNameContainingIgnoreCase(String name);
 
     Optional<Categoria> findByNameContainingIgnoreCase(String name);

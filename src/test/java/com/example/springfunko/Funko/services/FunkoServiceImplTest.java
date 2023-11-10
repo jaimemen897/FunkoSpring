@@ -264,10 +264,8 @@ class FunkoServiceImplTest {
         when(funkoRepository.save(any(Funko.class))).thenReturn(funko1);
         doNothing().when(webSocketHandlerMock).sendMessage(anyString());
 
-        // Act
         Funko updatedFunko = funkoServiceImpl.updateImage(funko1.getId(), multipartFile);
 
-        // Assert
         assertEquals(imageUrl, updatedFunko.getImagen());
 
         verify(funkoRepository, times(1)).save(any(Funko.class));

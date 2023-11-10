@@ -4,11 +4,13 @@ import com.example.springfunko.rest.funkos.dto.FunkoCreateDto;
 import com.example.springfunko.rest.funkos.dto.FunkoResponseDto;
 import com.example.springfunko.rest.funkos.dto.FunkoUpdateDto;
 import com.example.springfunko.rest.funkos.models.Funko;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface FunkoService {
-    List<Funko> findAll(String nombre, String categoria);
+    Page<FunkoResponseDto> findAll(Optional<String> nombre, Optional<String> categoria, Optional<Double> precioMax, Pageable pageable);
 
     Funko findById(long id);
 

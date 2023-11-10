@@ -19,20 +19,23 @@ import com.example.springfunko.websockets.notifications.models.Notification;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.persistence.criteria.Join;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Optional;
 
 @CacheConfig(cacheNames = {"funkos"})
 @Service
@@ -63,17 +66,23 @@ public class FunkoServiceImpl implements FunkoService {
     }
 
     @Override
-    public List<Funko> findAll(String nombre, String categoria) {
-        if ((nombre == null || nombre.isEmpty()) && (categoria == null || categoria.isEmpty())) {
-            return funkoRepository.findAll();
-        }
-        if ((nombre != null && !nombre.isEmpty()) && (categoria == null || categoria.isEmpty())) {
-            return funkoRepository.findAllByNombre(nombre);
-        }
-        if (nombre == null || nombre.isEmpty()) {
-            return funkoRepository.findAllByCategoriaName(categoria);
-        }
-        return funkoRepository.findAllByNombreAndCategoriaName(nombre, categoria);
+    public Page<FunkoResponseDto> findAll(Optional<String> nombre, Optional<String> categoria, Optional<Double> precioMax, Pageable pageable) {
+        Specification<Funko> specNombre = (root, query, criteriaBuilder) ->
+                nombre.map(value -> criteriaBuilder.like(criteriaBuilder.lower(root.get("nombre")), "%" + value.toLowerCase() + "%"))
+                        .orElseGet(() -> criteriaBuilder.isTrue(criteriaBuilder.literal(true)));
+
+        Specification<Funko> specCategoria = (root, query, criteriaBuilder) ->
+                categoria.map(value -> {
+                    Join<Funko, Categoria> categoriaJoin = root.join("categoria");
+                    return criteriaBuilder.like(criteriaBuilder.lower(categoriaJoin.get("name")), "%" + value.toLowerCase() + "%");
+                }).orElseGet(() -> criteriaBuilder.isTrue(criteriaBuilder.literal(true)));
+
+        Specification<Funko> specPrecio = (root, query, criteriaBuilder) ->
+                precioMax.map(value -> criteriaBuilder.lessThanOrEqualTo(root.get("precio"), value))
+                        .orElseGet(() -> criteriaBuilder.isTrue(criteriaBuilder.literal(true)));
+
+        Specification<Funko> spec = Specification.where(specNombre).and(specCategoria).and(specPrecio);
+        return funkoRepository.findAll(spec, pageable).map(funkoMapper::toFunkoResponseDto);
     }
 
     @Override
