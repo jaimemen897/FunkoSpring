@@ -24,9 +24,12 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -57,6 +60,9 @@ class FunkoServiceImplTest {
             .categoria(categoria2)
             .build();
 
+    FunkoResponseDto funkoResponseDto = new FunkoResponseDto(1L, "nombre4", 70.89, 3, "rutaImagen4", categoria1, LocalDate.now(), LocalDate.now());
+    FunkoResponseDto funkoResponseDto2 = new FunkoResponseDto(2L, "nombre5", 54.52, 1, "rutaImagen5", categoria2, LocalDate.now(), LocalDate.now());
+
     WebSocketHandler webSocketHandlerMock = mock(WebSocketHandler.class);
     @Mock
     private FunkoRepository funkoRepository;
@@ -82,42 +88,102 @@ class FunkoServiceImplTest {
 
     @Test
     void findAll() {
+        Optional<String> nombre = Optional.empty();
+        Optional<String> categoria = Optional.empty();
+        Optional<Double> precioMax = Optional.empty();
+
         List<Funko> expectedFunkos = Arrays.asList(funko1, funko2);
-        when(funkoRepository.findAll()).thenReturn(expectedFunkos);
-        List<Funko> actualFunkos = funkoServiceImpl.findAll(null, null);
-        assertIterableEquals(expectedFunkos, actualFunkos);
-        verify(funkoRepository, times(1)).findAll();
+        List<FunkoResponseDto> expectedFunkosResponseDto = Arrays.asList(funkoResponseDto, funkoResponseDto2);
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
+        Page<Funko> expectedPage = new PageImpl<>(expectedFunkos);
+
+        when(funkoRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(expectedPage);
+        when(funkoMapper.toFunkoResponseDto(any(Funko.class))).thenReturn(funkoResponseDto);
+
+        Page<FunkoResponseDto> actualPage = funkoServiceImpl.findAll(nombre, categoria, precioMax, pageable);
+        assertAll(
+                () -> assertNotNull(actualPage),
+                () -> assertFalse(actualPage.isEmpty()),
+                () -> assertTrue(actualPage.getTotalElements() > 0)
+        );
+
+        verify(funkoRepository, times(1)).findAll(any(Specification.class), any(Pageable.class));
+        verify(funkoMapper, times(2)).toFunkoResponseDto(any(Funko.class));
     }
 
     @Test
     void findAllByCategoria() {
-        String categoria = "Disney";
-        List<Funko> expectedFunkos = List.of(funko1);
-        when(funkoRepository.findAllByCategoriaName(categoria)).thenReturn(expectedFunkos);
-        List<Funko> actualFunkos = funkoServiceImpl.findAll(null, categoria);
-        assertIterableEquals(expectedFunkos, actualFunkos);
-        verify(funkoRepository, times(1)).findAllByCategoriaName(categoria);
+        Optional<String> nombre = Optional.empty();
+        Optional<String> categoria = Optional.of("Disney");
+        Optional<Double> precioMax = Optional.empty();
+
+        List<Funko> expectedFunkos = Arrays.asList(funko1);
+        List<FunkoResponseDto> expectedFunkosResponseDto = Arrays.asList(funkoResponseDto);
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
+        Page<Funko> expectedPage = new PageImpl<>(expectedFunkos);
+
+        when(funkoRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(expectedPage);
+        when(funkoMapper.toFunkoResponseDto(any(Funko.class))).thenReturn(funkoResponseDto);
+
+        Page<FunkoResponseDto> actualPage = funkoServiceImpl.findAll(nombre, categoria, precioMax, pageable);
+        assertAll(
+                () -> assertNotNull(actualPage),
+                () -> assertFalse(actualPage.isEmpty()),
+                () -> assertTrue(actualPage.getTotalElements() > 0)
+        );
+
+        verify(funkoRepository, times(1)).findAll(any(Specification.class), any(Pageable.class));
+        verify(funkoMapper, times(1)).toFunkoResponseDto(any(Funko.class));
     }
 
     @Test
     void findAllByNombre() {
-        String nombre = "nombre4";
-        List<Funko> expectedFunkos = List.of(funko1);
-        when(funkoRepository.findAllByNombre(nombre)).thenReturn(expectedFunkos);
-        List<Funko> actualFunkos = funkoServiceImpl.findAll(nombre, null);
-        assertIterableEquals(expectedFunkos, actualFunkos);
-        verify(funkoRepository, times(1)).findAllByNombre(nombre);
+        Optional<String> nombre = Optional.of("nombre4");
+        Optional<String> categoria = Optional.empty();
+        Optional<Double> precioMax = Optional.empty();
+
+        List<Funko> expectedFunkos = Arrays.asList(funko1);
+        List<FunkoResponseDto> expectedFunkosResponseDto = Arrays.asList(funkoResponseDto);
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
+        Page<Funko> expectedPage = new PageImpl<>(expectedFunkos);
+
+        when(funkoRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(expectedPage);
+        when(funkoMapper.toFunkoResponseDto(any(Funko.class))).thenReturn(funkoResponseDto);
+
+        Page<FunkoResponseDto> actualPage = funkoServiceImpl.findAll(nombre, categoria, precioMax, pageable);
+        assertAll(
+                () -> assertNotNull(actualPage),
+                () -> assertFalse(actualPage.isEmpty()),
+                () -> assertTrue(actualPage.getTotalElements() > 0)
+        );
+
+        verify(funkoRepository, times(1)).findAll(any(Specification.class), any(Pageable.class));
+        verify(funkoMapper, times(1)).toFunkoResponseDto(any(Funko.class));
     }
 
     @Test
-    void findAllByNombreAndCategoria() {
-        String nombre = "nombre4";
-        String categoria = "dc";
-        List<Funko> expectedFunkos = List.of(funko1);
-        when(funkoRepository.findAllByNombreAndCategoriaName(nombre, categoria)).thenReturn(expectedFunkos);
-        List<Funko> actualFunkos = funkoServiceImpl.findAll(nombre, categoria);
-        assertIterableEquals(expectedFunkos, actualFunkos);
-        verify(funkoRepository, times(1)).findAllByNombreAndCategoriaName(nombre, categoria);
+    void findAllByMaxPrice() {
+        Optional<String> nombre = Optional.empty();
+        Optional<String> categoria = Optional.empty();
+        Optional<Double> precioMax = Optional.of(70.89);
+
+        List<Funko> expectedFunkos = Arrays.asList(funko1);
+        List<FunkoResponseDto> expectedFunkosResponseDto = Arrays.asList(funkoResponseDto);
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
+        Page<Funko> expectedPage = new PageImpl<>(expectedFunkos);
+
+        when(funkoRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(expectedPage);
+        when(funkoMapper.toFunkoResponseDto(any(Funko.class))).thenReturn(funkoResponseDto);
+
+        Page<FunkoResponseDto> actualPage = funkoServiceImpl.findAll(nombre, categoria, precioMax, pageable);
+        assertAll(
+                () -> assertNotNull(actualPage),
+                () -> assertFalse(actualPage.isEmpty()),
+                () -> assertTrue(actualPage.getTotalElements() > 0)
+        );
+
+        verify(funkoRepository, times(1)).findAll(any(Specification.class), any(Pageable.class));
+        verify(funkoMapper, times(1)).toFunkoResponseDto(any(Funko.class));
     }
 
     @Test

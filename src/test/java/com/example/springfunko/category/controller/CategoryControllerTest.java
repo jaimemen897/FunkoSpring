@@ -4,6 +4,7 @@ import com.example.springfunko.rest.category.dto.CategoryResponseDto;
 import com.example.springfunko.rest.category.exception.CategoryNotFound;
 import com.example.springfunko.rest.category.models.Categoria;
 import com.example.springfunko.rest.category.services.CategoryService;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
@@ -15,11 +16,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import com.example.springfunko.utils.pagination.PageResponse;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -51,52 +58,85 @@ class CategoryControllerTest {
     @Test
     void getAll() throws Exception {
         var categoryList = List.of(categoria, categoria2);
+        Page<Categoria> page = new PageImpl<>(categoryList);
+        var pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
 
-        when(categoryService.findAll(null)).thenReturn(categoryList);
+        when(categoryService.findAll(Optional.empty(), Optional.empty(), pageable)).thenReturn(page);
 
         MockHttpServletResponse response = mockMvc.perform(
                         get(BASE_URL)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
-        List<Categoria> categoriaList = mapper.readValue(response.getContentAsString(),
-                mapper.getTypeFactory().constructCollectionType(List.class, Categoria.class));
+
+        PageResponse<Categoria> res = mapper.readValue(response.getContentAsString(), new TypeReference<>() {
+        });
 
         assertAll(
                 () -> assertEquals(200, response.getStatus()),
-                () -> assertEquals(2, categoriaList.size()),
-                () -> assertEquals("Categoria 1", categoriaList.get(0).getName()),
-                () -> assertEquals("Categoria 2", categoriaList.get(1).getName())
+                () -> assertEquals(2, res.content().size()),
+                () -> assertEquals("Categoria 1", res.content().get(0).getName()),
+                () -> assertEquals("Categoria 2", res.content().get(1).getName())
 
         );
-        verify(categoryService, times(1)).findAll(null);
+        verify(categoryService, times(1)).findAll(Optional.empty(), Optional.empty(), pageable);
     }
 
     @Test
     void getAllByName() throws Exception {
         var LOCAL_URL = BASE_URL + "?name=Categoria 1";
         var categoryList = List.of(categoria);
+        Optional<String> name = Optional.of("Categoria 1");
+        Page<Categoria> page = new PageImpl<>(categoryList);
+        var pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
 
-        when(categoryService.findAll("Categoria 1")).thenReturn(categoryList);
+        when(categoryService.findAll(name, Optional.empty(), pageable)).thenReturn(page);
 
         MockHttpServletResponse response = mockMvc.perform(
                         get(LOCAL_URL)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
-        List<Categoria> categoriaList = mapper.readValue(response.getContentAsString(),
-                mapper.getTypeFactory().constructCollectionType(List.class, Categoria.class));
+
+        PageResponse<Categoria> res = mapper.readValue(response.getContentAsString(), new TypeReference<>() {
+        });
 
         assertAll(
                 () -> assertEquals(200, response.getStatus()),
-                () -> assertEquals(1, categoriaList.size()),
-                () -> assertEquals("Categoria 1", categoriaList.get(0).getName())
+                () -> assertEquals(1, res.content().size()),
+                () -> assertEquals("Categoria 1", res.content().get(0).getName())
 
         );
-        verify(categoryService, times(1)).findAll("Categoria 1");
+        verify(categoryService, times(1)).findAll(name, Optional.empty(), pageable);
+    }
+
+    @Test
+    void getAllByIsDeleted() throws Exception {
+        var LOCAL_URL = BASE_URL + "?isDeleted=false";
+        var categoryList = List.of(categoria);
+        Optional<Boolean> isDeleted = Optional.of(false);
+        Page<Categoria> page = new PageImpl<>(categoryList);
+        var pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
+
+        when(categoryService.findAll(Optional.empty(), isDeleted, pageable)).thenReturn(page);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                        get(LOCAL_URL)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        PageResponse<Categoria> res = mapper.readValue(response.getContentAsString(), new TypeReference<>() {
+        });
+
+        assertAll(
+                () -> assertEquals(200, response.getStatus()),
+                () -> assertEquals(1, res.content().size()),
+                () -> assertEquals("Categoria 1", res.content().get(0).getName())
+
+        );
+        verify(categoryService, times(1)).findAll(Optional.empty(), isDeleted, pageable);
     }
 
     @Test
     void getById() throws Exception {
-
         var LOCAL_URL = BASE_URL + "/1";
         when(categoryService.findById(1L)).thenReturn(categoria);
 

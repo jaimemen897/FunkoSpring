@@ -14,6 +14,8 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,29 +41,60 @@ class CategoryServiceImplTest {
 
     @Test
     void findAll() {
-        List<Categoria> expectedCategories = List.of(categoria, categoria2);
+        Optional<String> name = Optional.empty();
+        Optional<Boolean> isDeleted = Optional.empty();
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
+        Page<Categoria> expectedPage = new PageImpl<>(List.of(categoria, categoria2));
 
-        when(categoryRepository.findAll()).thenReturn(expectedCategories);
-        List<Categoria> actualCategories = categoryService.findAll(null);
+        when(categoryRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(expectedPage);
+
+        var res = categoryService.findAll(name, isDeleted, pageable);
+
         assertAll(
-                () -> assertEquals(expectedCategories, actualCategories),
-                () -> assertEquals(expectedCategories.size(), actualCategories.size())
+                () -> assertNotNull(res),
+                () -> assertFalse(res.isEmpty())
         );
-        verify(categoryRepository, times(1)).findAll();
+
+        verify(categoryRepository, times(1)).findAll(any(Specification.class), any(Pageable.class));
     }
 
     @Test
     void findAllByName() {
-        List<Categoria> expectedCategories = List.of(categoria);
-        when(categoryRepository.findAllByNameContainingIgnoreCase("Disney")).thenReturn(Optional.of(expectedCategories));
-        List<Categoria> actualCategories = categoryService.findAll("Disney");
+        Optional<String> name = Optional.of("Disney");
+        Optional<Boolean> isDeleted = Optional.empty();
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
+        Page<Categoria> expectedPage = new PageImpl<>(List.of(categoria, categoria2));
+
+        when(categoryRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(expectedPage);
+
+        var res = categoryService.findAll(name, isDeleted, pageable);
+
         assertAll(
-                () -> assertEquals(expectedCategories, actualCategories),
-                () -> assertEquals(expectedCategories.size(), actualCategories.size())
+                () -> assertNotNull(res),
+                () -> assertFalse(res.isEmpty())
         );
-        verify(categoryRepository, times(1)).findAllByNameContainingIgnoreCase("Disney");
+
+        verify(categoryRepository, times(1)).findAll(any(Specification.class), any(Pageable.class));
     }
 
+    @Test
+    void findAllByIsDeleted() {
+        Optional<String> name = Optional.empty();
+        Optional<Boolean> isDeleted = Optional.of(false);
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
+        Page<Categoria> expectedPage = new PageImpl<>(List.of(categoria, categoria2));
+
+        when(categoryRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(expectedPage);
+
+        var res = categoryService.findAll(name, isDeleted, pageable);
+
+        assertAll(
+                () -> assertNotNull(res),
+                () -> assertFalse(res.isEmpty())
+        );
+
+        verify(categoryRepository, times(1)).findAll(any(Specification.class), any(Pageable.class));
+    }
 
     @Test
     void findById() {
@@ -84,9 +117,11 @@ class CategoryServiceImplTest {
 
     @Test
     void save() {
-        CategoryResponseDto categoryResponseDto = new CategoryResponseDto("Disney", false);
-        Categoria expectedCategory = Categoria.builder().name("Disney").build();
+        CategoryResponseDto categoryResponseDto = new CategoryResponseDto("Disney2", false);
+        Categoria expectedCategory = Categoria.builder().name("Disney2").build();
 
+        when(categoryRepository.getIdByName("Disney2")).thenReturn(Optional.empty());
+        when(categoryMapper.toCategory(categoryResponseDto)).thenReturn(expectedCategory);
         when(categoryRepository.save(any(Categoria.class))).thenReturn(expectedCategory);
 
         Categoria actualCategory = categoryService.save(categoryResponseDto);
@@ -97,7 +132,7 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    void saveAlreadyExist(){
+    void saveAlreadyExist() {
         CategoryResponseDto categoryResponseDto = new CategoryResponseDto("Disney", false);
 
         when(categoryRepository.getIdByName("Disney")).thenReturn(Optional.of(1L));
@@ -110,17 +145,19 @@ class CategoryServiceImplTest {
 
     @Test
     void update() {
-        Categoria expectedCategory = Categoria.builder().name("Disney").build();
-        Categoria categoryToUpdate = Categoria.builder().name("Disney").build();
-        CategoryResponseDto categoryResponseDto = new CategoryResponseDto("Disney", false);
+        Categoria expectedCategory = Categoria.builder().name("Disney3").build();
+        Categoria categoryToUpdate = Categoria.builder().name("Disney3").build();
+        CategoryResponseDto categoryResponseDto = new CategoryResponseDto("Disney3", false);
 
-        when(categoryRepository.findById(1L)).thenReturn(Optional.of(categoryToUpdate));
+        when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(categoryToUpdate));
+        when(categoryMapper.toCategory(categoryResponseDto, categoryToUpdate)).thenReturn(expectedCategory);
         when(categoryRepository.save(any(Categoria.class))).thenReturn(expectedCategory);
 
         Categoria actualCategory = categoryService.update(categoryResponseDto, 1L);
 
         assertEquals(expectedCategory, actualCategory);
 
+        verify(categoryRepository, times(1)).findById(1L);
         verify(categoryRepository, times(1)).findById(1L);
         verify(categoryRepository, times(1)).save(categoryArgumentCaptor.capture());
     }
@@ -134,7 +171,7 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    void deleteByIdContainsFunkos(){
+    void deleteByIdContainsFunkos() {
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(categoria));
         when(categoryRepository.existsFunkoById(1L)).thenReturn(true);
         var res = assertThrows(CategoryConflict.class, () -> categoryService.deleteById(1L));

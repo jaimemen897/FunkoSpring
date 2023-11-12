@@ -1,5 +1,6 @@
 package com.example.springfunko.Funko.controller;
 
+
 import com.example.springfunko.rest.category.models.Categoria;
 import com.example.springfunko.rest.funkos.dto.FunkoCreateDto;
 import com.example.springfunko.rest.funkos.dto.FunkoResponseDto;
@@ -7,6 +8,7 @@ import com.example.springfunko.rest.funkos.dto.FunkoUpdateDto;
 import com.example.springfunko.rest.funkos.exception.FunkoNotFound;
 import com.example.springfunko.rest.funkos.models.Funko;
 import com.example.springfunko.rest.funkos.services.FunkoServiceImpl;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import com.example.springfunko.utils.pagination.PageResponse;
+
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
@@ -26,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -59,6 +69,7 @@ class FunkoRestControllerTest {
             .imagen("rutaImagen5")
             .build();
     FunkoResponseDto funkoResponseDto = new FunkoResponseDto(1L, "nombre4", 70.89, 3, "rutaImagen4", categoria1, LocalDate.now(), LocalDate.now());
+    FunkoResponseDto funkoResponseDto2 = new FunkoResponseDto(2L, "nombre5", 54.52, 1, "rutaImagen5", categoria2, LocalDate.now(), LocalDate.now());
 
     @Autowired
     MockMvc mockMvc;
@@ -75,77 +86,111 @@ class FunkoRestControllerTest {
 
     @Test
     void getAllFunkos() throws Exception {
-        var funkolist = List.of(funko1, funko2);
+        var funkolist = List.of(funkoResponseDto, funkoResponseDto2);
+        var page = new PageImpl<>(funkolist);
+        var pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
 
-        when(funkoService.findAll(null, null)).thenReturn(funkolist);
+        Optional<String> name = Optional.empty();
+        Optional<String> categoria = Optional.empty();
+        Optional<Double> precioMax = Optional.empty();
+
+        when(funkoService.findAll(name, categoria, precioMax, pageable)).thenReturn(page);
 
         MockHttpServletResponse response = mockMvc.perform(
                         get(myEndpoint)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
-        List<FunkoResponseDto> res = mapper.readValue(response.getContentAsString(),
-                mapper.getTypeFactory().constructCollectionType(List.class, FunkoResponseDto.class));
+
+        PageResponse<FunkoResponseDto> res = mapper.readValue(response.getContentAsString(), new TypeReference<>(){});
+
         assertAll(
                 () -> assertEquals(200, response.getStatus()),
-                () -> assertEquals(2, funkolist.size()),
-                () -> assertEquals(funkolist.get(0).getNombre(), res.get(0).nombre()),
-                () -> assertEquals(funkolist.get(0).getPrecio(), res.get(0).precio()),
-                () -> assertEquals(funkolist.get(0).getCantidad(), res.get(0).cantidad()),
-                () -> assertEquals(funkolist.get(0).getImagen(), res.get(0).imagen()),
-                () -> assertEquals(funkolist.get(0).getCategoria(), res.get(0).categoria()),
-                () -> assertEquals(funkolist.get(1).getNombre(), res.get(1).nombre()),
-                () -> assertEquals(funkolist.get(1).getPrecio(), res.get(1).precio()),
-                () -> assertEquals(funkolist.get(1).getCantidad(), res.get(1).cantidad()),
-                () -> assertEquals(funkolist.get(1).getImagen(), res.get(1).imagen()),
-                () -> assertEquals(funkolist.get(1).getCategoria(), res.get(1).categoria())
+                () -> assertEquals(2, res.content().size())
         );
 
-        verify(funkoService, times(1)).findAll(null, null);
+        verify(funkoService, times(1)).findAll(name, categoria, precioMax, pageable);
     }
 
     @Test
     void getAllFunkosByCategoria() throws Exception {
-        var funkoList = List.of(funko2);
-        var localEndPoint = myEndpoint + "?categoria=disney";
-        when(funkoService.findAll(null, "disney")).thenReturn(funkoList);
+        var funkolist = List.of(funkoResponseDto);
+        var LOCAL_ENDPOINT = "/api/funkos?categoria=Disney";
+
+        Optional<String> categoria = Optional.of("Disney");
+
+        var pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
+        var page = new PageImpl<>(funkolist);
+
+        when(funkoService.findAll(Optional.empty(), categoria, Optional.empty(), pageable)).thenReturn(page);
+
         MockHttpServletResponse response = mockMvc.perform(
-                        get(localEndPoint)
+                        get(LOCAL_ENDPOINT)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
-        List<FunkoResponseDto> res = mapper.readValue(response.getContentAsString(),
-                mapper.getTypeFactory().constructCollectionType(List.class, FunkoResponseDto.class));
+
+        PageResponse<FunkoResponseDto> res = mapper.readValue(response.getContentAsString(), new TypeReference<>(){
+        });
 
         assertAll(
                 () -> assertEquals(200, response.getStatus()),
-                () -> assertEquals(1, funkoList.size()),
-                () -> assertEquals(funkoList.get(0).getNombre(), res.get(0).nombre()),
-                () -> assertEquals(funkoList.get(0).getPrecio(), res.get(0).precio()),
-                () -> assertEquals(funkoList.get(0).getCantidad(), res.get(0).cantidad()),
-                () -> assertEquals(funkoList.get(0).getImagen(), res.get(0).imagen()),
-                () -> assertEquals(funkoList.get(0).getCategoria(), res.get(0).categoria())
+                () -> assertEquals(1, res.content().size())
         );
+
+        verify(funkoService, times(1)).findAll(Optional.empty(), categoria, Optional.empty(), pageable);
     }
 
     @Test
     void getAllFunkoByNombre() throws Exception {
-        var funkoList = List.of(funko1);
-        var localEndPoint = myEndpoint + "?nombre=nombre4";
-        when(funkoService.findAll("nombre4", null)).thenReturn(funkoList);
+        var LOCAL_ENDPOINT = "/api/funkos?nombre=nombre4";
+        var funkolist = List.of(funkoResponseDto);
+        var pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
+        var page = new PageImpl<>(funkolist);
+
+        Optional<String> name = Optional.of("nombre4");
+
+        when(funkoService.findAll(name, Optional.empty(), Optional.empty(), pageable)).thenReturn(page);
+
         MockHttpServletResponse response = mockMvc.perform(
-                        get(localEndPoint)
+                        get(LOCAL_ENDPOINT)
                                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
-        List<FunkoResponseDto> res = mapper.readValue(response.getContentAsString(),
-                mapper.getTypeFactory().constructCollectionType(List.class, FunkoResponseDto.class));
+
+        PageResponse<FunkoResponseDto> res = mapper.readValue(response.getContentAsString(), new TypeReference<>(){});
+
         assertAll(
                 () -> assertEquals(200, response.getStatus()),
-                () -> assertEquals(1, funkoList.size()),
-                () -> assertEquals(funkoList.get(0).getNombre(), res.get(0).nombre()),
-                () -> assertEquals(funkoList.get(0).getPrecio(), res.get(0).precio()),
-                () -> assertEquals(funkoList.get(0).getCantidad(), res.get(0).cantidad()),
-                () -> assertEquals(funkoList.get(0).getImagen(), res.get(0).imagen()),
-                () -> assertEquals(funkoList.get(0).getCategoria(), res.get(0).categoria())
+                () -> assertEquals(1, res.content().size())
         );
+
+        verify(funkoService, times(1)).findAll(name, Optional.empty(), Optional.empty(), pageable);
+    }
+
+    @Test
+    void getAllFunkoByMaxPrice() throws Exception {
+        var LOCAL_ENDPOINT = "/api/funkos?precioMax=70.89";
+        var funkolist = List.of(funkoResponseDto);
+        var pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
+        var page = new PageImpl<>(funkolist);
+
+        Optional<String> name = Optional.empty();
+        Optional<String> categoria = Optional.empty();
+        Optional<Double> precioMax = Optional.of(70.89);
+
+        when(funkoService.findAll(name, categoria, precioMax, pageable)).thenReturn(page);
+
+        MockHttpServletResponse response = mockMvc.perform(
+                        get(LOCAL_ENDPOINT)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        PageResponse<FunkoResponseDto> res = mapper.readValue(response.getContentAsString(), new TypeReference<>(){});
+
+        assertAll(
+                () -> assertEquals(200, response.getStatus()),
+                () -> assertEquals(1, res.content().size())
+        );
+
+        verify(funkoService, times(1)).findAll(name, categoria, precioMax, pageable);
     }
 
     @Test
