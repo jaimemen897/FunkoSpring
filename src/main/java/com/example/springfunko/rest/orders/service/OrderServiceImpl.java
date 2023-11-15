@@ -129,12 +129,12 @@ public class OrderServiceImpl implements OrderService {
         }
         order.getOrderLines().forEach(orderLine -> {
             var funko = funkoRepository.findById(orderLine.getIdFunko())
-                    .orElseThrow(() -> new FunkoNotFound(orderLine.getIdFunko().toString()));
+                    .orElseThrow(() -> new FunkoNotFound("Funko not found with id: " + orderLine.getIdFunko()));
             if (funko.getCantidad() < orderLine.getQuantity() && orderLine.getQuantity() > 0) {
-                throw new FunkoNotStock(funko.getId().toString());
+                throw new FunkoNotStock("Funko stock is: " + funko.getCantidad() + " and order quantity is: " + orderLine.getQuantity());
             }
             if (!funko.getPrecio().equals(orderLine.getPrice())) {
-                throw new FunkoBadPrice(funko.getId().toString());
+                throw new FunkoBadPrice("Funko price is: " + funko.getPrecio() + " and order price is: " + orderLine.getPrice());
             }
         });
     }
