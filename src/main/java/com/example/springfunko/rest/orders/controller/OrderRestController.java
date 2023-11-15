@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/api/pedidos")
 @Slf4j
 public class OrderRestController {
     private final OrderService orderService;

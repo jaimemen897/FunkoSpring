@@ -23,7 +23,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Document("orders")
-@TypeAlias("order")
+@TypeAlias("Order")
 @EntityListeners(AuditingEntityListener.class)
 public class Order {
     @Id
@@ -52,6 +52,9 @@ public class Order {
     @UpdateTimestamp
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @Builder.Default
+    private Boolean isDeleted = false;
 
     @JsonProperty("id")
     public String get_id() {
