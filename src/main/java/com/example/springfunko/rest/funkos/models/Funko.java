@@ -33,7 +33,7 @@ public class Funko {
 
     @Min(value = 0, message = "El precio no puede ser negativo")
     @Column(nullable = false)
-    private double precio;
+    private Double precio;
 
     @Min(value = 0, message = "la cantidad no puede ser negativo")
     @Column(nullable = false)
