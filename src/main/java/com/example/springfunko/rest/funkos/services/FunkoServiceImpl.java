@@ -24,6 +24,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -86,10 +87,9 @@ public class FunkoServiceImpl implements FunkoService {
     }
 
     @Override
-    @Cacheable
-    public Funko findById(long id) {
-        return funkoRepository.findById(id).orElseThrow(
-                () -> new FunkoNotFound("Funko no encontrado"));
+    @Cacheable(key = "#id")
+    public FunkoResponseDto findById(long id) {
+        return funkoMapper.toFunkoResponseDto(funkoRepository.findById(id).orElseThrow(() -> new FunkoNotFound("Funko no encontrado")));
     }
 
     private Categoria checkCategoria(String nameCategory) {
@@ -101,23 +101,23 @@ public class FunkoServiceImpl implements FunkoService {
     }
 
     @Override
-    @Cacheable
+    @CachePut(key = "#result.id")
     public FunkoResponseDto save(FunkoCreateDto funko) {
-        var categoria = checkCategoria(funko.categoria().getName());
+        var categoria = checkCategoria(funko.categoria());
         var funkoSaved = funkoRepository.save(funkoMapper.toFunko(funko, categoria));
         onChange(Notification.Tipo.CREATE, funkoSaved);
         return funkoMapper.toFunkoResponseDto(funkoSaved);
     }
 
     @Override
-    @Cacheable
+    @CachePut(key = "#result.id")
     @Transactional
     public FunkoResponseDto update(FunkoUpdateDto funko, Long id) {
         var funkoActual = funkoRepository.findById(id).orElseThrow(() -> new FunkoNotFound("Funko no encontrado"));
         Categoria categoria = null;
 
-        if (funko.categoria() != null && !funko.categoria().getName().isEmpty()) {
-            categoria = checkCategoria(funko.categoria().getName());
+        if (funko.categoria() != null && !funko.categoria().isEmpty()) {
+            categoria = checkCategoria(funko.categoria());
         } else {
             categoria = funkoActual.getCategoria();
         }
@@ -127,24 +127,26 @@ public class FunkoServiceImpl implements FunkoService {
         return funkoMapper.toFunkoResponseDto(funkoUpdated);
     }
 
-    @CachePut(key = "#id")
-    public Funko updateImage(Long id, MultipartFile file) {
+    @Override
+    @CachePut(key = "#result.id")
+    @Transactional
+    public FunkoResponseDto updateImage(Long id, MultipartFile file) {
         if (!file.isEmpty()) {
             String imagen = storageService.store(file);
             String urlImagen = storageService.getUrl(imagen);
 
-            Funko funko = findById(id);
+            Funko funko = funkoRepository.findById(id).orElseThrow(() -> new FunkoNotFound("Funko no encontrado"));
             storageService.delete(funko.getImagen());
             funko.setImagen(urlImagen);
             onChange(Notification.Tipo.UPDATE, funko);
-            return funkoRepository.save(funko);
+            return funkoMapper.toFunkoResponseDto(funkoRepository.save(funko));
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No se ha enviado la imagen");
         }
     }
 
     @Override
-    @Cacheable
+    @CacheEvict
     @Transactional
     public void deleteById(long id) {
         var funk = funkoRepository.findById(id).orElseThrow(() -> new FunkoNotFound("Funko no encontrado"));

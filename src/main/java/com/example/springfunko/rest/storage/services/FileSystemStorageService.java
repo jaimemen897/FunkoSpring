@@ -55,6 +55,7 @@ public class FileSystemStorageService implements StorageService {
             }
 
             try (InputStream inputStream = file.getInputStream()) {
+                storedFilename = storedFilename.replace(" ", "_");
                 log.info("Almacenando fichero " + filename + " como " + storedFilename);
                 Files.copy(inputStream, this.rootLocation.resolve(storedFilename),
                         StandardCopyOption.REPLACE_EXISTING);

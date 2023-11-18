@@ -189,9 +189,10 @@ class FunkoServiceImplTest {
     @Test
     void findById() {
         Long id = 1L;
-        Funko expectedFunko = funko1;
-        when(funkoRepository.findById(id)).thenReturn(Optional.ofNullable(expectedFunko));
-        Funko actualFunko = funkoServiceImpl.findById(id);
+        FunkoResponseDto expectedFunko = funkoResponseDto;
+        when(funkoRepository.findById(id)).thenReturn(Optional.of(funko1));
+        when(funkoMapper.toFunkoResponseDto(funko1)).thenReturn(expectedFunko);
+        FunkoResponseDto actualFunko = funkoServiceImpl.findById(id);
         assertEquals(expectedFunko, actualFunko);
         verify(funkoRepository, times(1)).findById(id);
     }
@@ -328,15 +329,17 @@ class FunkoServiceImplTest {
         when(storageService.store(multipartFile)).thenReturn(imageUrl);
         when(storageService.getUrl(imageUrl)).thenReturn(imageUrl);
         when(funkoRepository.save(any(Funko.class))).thenReturn(funko1);
+        when(funkoMapper.toFunkoResponseDto(any(Funko.class))).thenReturn(funkoResponseDto);
         doNothing().when(webSocketHandlerMock).sendMessage(anyString());
 
-        Funko updatedFunko = funkoServiceImpl.updateImage(funko1.getId(), multipartFile);
+        FunkoResponseDto updatedFunko = funkoServiceImpl.updateImage(funko1.getId(), multipartFile);
 
-        assertEquals(imageUrl, updatedFunko.getImagen());
+        assertEquals(imageUrl, updatedFunko.imagen());
 
         verify(funkoRepository, times(1)).save(any(Funko.class));
         verify(storageService, times(1)).delete(funko1.getImagen());
         verify(storageService, times(1)).store(multipartFile);
+        verify(storageService, times(1)).getUrl(imageUrl);
     }
 
     @Test

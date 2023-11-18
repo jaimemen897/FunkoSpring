@@ -1,6 +1,5 @@
 package com.example.springfunko.rest.funkos.dto;
 
-import com.example.springfunko.rest.category.models.Categoria;
 import jakarta.validation.constraints.Min;
 
 public record FunkoUpdateDto(
@@ -10,6 +9,6 @@ public record FunkoUpdateDto(
         @Min(value = 0, message = "la cantidad no puede ser negativo")
         Integer cantidad,
         String imagen,
-        Categoria categoria
+        String categoria
 ) {
 }

@@ -196,7 +196,7 @@ class FunkoRestControllerTest {
     @Test
     void getFunkoById() throws Exception {
         var localEndPoint = myEndpoint + "/1";
-        when(funkoService.findById(1L)).thenReturn(funko1);
+        when(funkoService.findById(1L)).thenReturn(funkoResponseDto);
         MockHttpServletResponse response = mockMvc.perform(
                         get(localEndPoint)
                                 .accept(MediaType.APPLICATION_JSON))
@@ -415,7 +415,7 @@ class FunkoRestControllerTest {
     void patchFunkoImage() throws Exception {
         var localEndPoint = myEndpoint + "/imagen/1";
 
-        when(funkoService.updateImage(anyLong(), any(MultipartFile.class))).thenReturn(funko1);
+        when(funkoService.updateImage(anyLong(), any(MultipartFile.class))).thenReturn(funkoResponseDto);
 
         MockMultipartFile file = new MockMultipartFile(
                 "file",

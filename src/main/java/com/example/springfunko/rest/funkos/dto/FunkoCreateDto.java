@@ -1,6 +1,5 @@
 package com.example.springfunko.rest.funkos.dto;
 
-import com.example.springfunko.rest.category.models.Categoria;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -20,6 +19,6 @@ public record FunkoCreateDto(
         @NotEmpty
         String imagen,
         @NotNull
-        Categoria categoria
+        String categoria
 ) {
 }

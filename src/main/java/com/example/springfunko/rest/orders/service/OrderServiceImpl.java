@@ -83,8 +83,7 @@ public class OrderServiceImpl implements OrderService {
     @CachePut(key = "#objectId")
     public Order update(ObjectId objectId, Order order) {
         log.info("Update order by id: {}", objectId);
-        var orderToUpdate = orderRepository.findById(objectId)
-                .orElseThrow(() -> new OrderNotFound(objectId.toHexString()));
+        Order orderToUpdate = orderRepository.findById(objectId).orElseThrow(() -> new OrderNotFound(objectId.toHexString()));
 
         returnStockOrders(orderToUpdate);
         checkOrder(order);

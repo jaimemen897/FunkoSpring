@@ -3,7 +3,6 @@ package com.example.springfunko.rest.funkos.controller;
 import com.example.springfunko.rest.funkos.dto.FunkoCreateDto;
 import com.example.springfunko.rest.funkos.dto.FunkoResponseDto;
 import com.example.springfunko.rest.funkos.dto.FunkoUpdateDto;
-import com.example.springfunko.rest.funkos.models.Funko;
 import com.example.springfunko.rest.funkos.services.FunkoServiceImpl;
 import com.example.springfunko.utils.pagination.PageResponse;
 import com.example.springfunko.utils.pagination.PaginationLinksUtils;
@@ -77,7 +76,7 @@ public class FunkoRestController {
 
     @GetMapping("/{id}")
     @Min(value = 0, message = "El id no puede ser negativo")
-    public ResponseEntity<Funko> getFunkoById(@PathVariable Integer id) {
+    public ResponseEntity<FunkoResponseDto> getFunkoById(@PathVariable Integer id) {
         return ResponseEntity.ok(funkoService.findById(id));
     }
 
@@ -101,7 +100,7 @@ public class FunkoRestController {
 
     @NonNull
     @PatchMapping(value = "/imagen/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Funko> patchFunko(@PathVariable Long id, @RequestPart("file") MultipartFile file) {
+    public ResponseEntity<FunkoResponseDto> patchFunko(@PathVariable Long id, @RequestPart("file") MultipartFile file) {
         if (!Objects.requireNonNull(file.getContentType()).startsWith("image/")) {
             return ResponseEntity.badRequest().build();
         }
