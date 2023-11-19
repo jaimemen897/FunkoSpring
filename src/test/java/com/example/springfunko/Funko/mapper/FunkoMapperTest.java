@@ -17,7 +17,7 @@ class FunkoMapperTest {
     @Test
     void toFunkoTest() {
         Long id = 1L;
-        FunkoCreateDto funkoCreateDto = new FunkoCreateDto("nombre", 54.52, 1, "rutaImagen", categoria1);
+        FunkoCreateDto funkoCreateDto = new FunkoCreateDto("nombre", 54.52, 1, "rutaImagen", categoria1.getName());
 
         var res = funkoMapper.toFunko(funkoCreateDto, categoria1);
 
@@ -26,14 +26,14 @@ class FunkoMapperTest {
                 () -> assertEquals(funkoCreateDto.precio(), res.getPrecio()),
                 () -> assertEquals(funkoCreateDto.cantidad(), res.getCantidad()),
                 () -> assertEquals(funkoCreateDto.imagen(), res.getImagen()),
-                () -> assertEquals(funkoCreateDto.categoria(), res.getCategoria())
+                () -> assertEquals(funkoCreateDto.categoria(), res.getCategoria().getName())
         );
     }
 
     @Test
     void testToFunko() {
         Long id = 1L;
-        FunkoUpdateDto funkoCreateDto = new FunkoUpdateDto("nombre", 54.52, 1, "rutaImagen", categoria1);
+        FunkoUpdateDto funkoCreateDto = new FunkoUpdateDto("nombre", 54.52, 1, "rutaImagen", categoria1.getName());
 
         Funko funko = Funko.builder()
                 .id(id)
@@ -52,7 +52,7 @@ class FunkoMapperTest {
                 () -> assertEquals(funkoCreateDto.precio(), res.getPrecio()),
                 () -> assertEquals(funkoCreateDto.cantidad(), res.getCantidad()),
                 () -> assertEquals(funkoCreateDto.imagen(), res.getImagen()),
-                () -> assertEquals(funkoCreateDto.categoria(), res.getCategoria()));
+                () -> assertEquals(funkoCreateDto.categoria(), res.getCategoria().getName()));
     }
 
     @Test

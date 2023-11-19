@@ -226,13 +226,13 @@ class FunkoRestControllerTest {
 
     @Test
     void postFunko() throws Exception {
-        var funkoDto = new FunkoCreateDto("nombre4", 70.89, 3, "rutaImagen4", categoria1);
+        var funkoDto = new FunkoCreateDto("nombre4", 70.89, 3, "rutaImagen4", "Disney");
 
         when(funkoService.save(funkoDto)).thenReturn(funkoResponseDto);
         MockHttpServletResponse response = mockMvc.perform(
                         post(myEndpoint)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonFunko.write(funko1).getJson()))
+                                .content(mapper.writeValueAsString(funkoDto)))
                 .andReturn().getResponse();
         FunkoResponseDto res = mapper.readValue(response.getContentAsString(), FunkoResponseDto.class);
         assertAll(
@@ -247,7 +247,7 @@ class FunkoRestControllerTest {
 
     @Test
     void postFunkoNotValidName() throws Exception {
-        var funkoDto = new FunkoCreateDto("", 70.89, 3, "rutaImagen4", new Categoria());
+        var funkoDto = new FunkoCreateDto("", 70.89, 3, "rutaImagen4", categoria1.getName());
         FunkoResponseDto funkoResponseDto = new FunkoResponseDto(1L, "nombre4", 70.89, 3, "rutaImagen4", categoria1, LocalDate.now(), LocalDate.now());
 
 
@@ -265,7 +265,7 @@ class FunkoRestControllerTest {
 
     @Test
     void postFunkoNotValidPrice() throws Exception {
-        var funkoDto = new FunkoCreateDto("nombre4", -70.89, 3, "rutaImagen4", categoria1);
+        var funkoDto = new FunkoCreateDto("nombre4", -70.89, 3, "rutaImagen4", categoria1.getName());
 
         MockHttpServletResponse response = mockMvc.perform(
                         post(myEndpoint)
@@ -282,7 +282,7 @@ class FunkoRestControllerTest {
 
     @Test
     void postFunkoNotValidCantidad() throws Exception {
-        var funkoDto = new FunkoCreateDto("nombre4", 70.89, -3, "rutaImagen4", categoria1);
+        var funkoDto = new FunkoCreateDto("nombre4", 70.89, -3, "rutaImagen4", categoria1.getName());
 
         MockHttpServletResponse response = mockMvc.perform(
                         post(myEndpoint)
@@ -299,7 +299,7 @@ class FunkoRestControllerTest {
 
     @Test
     void postFunkoNotValidImagen() throws Exception {
-        var funkoDto = new FunkoCreateDto("nombre4", 70.89, 3, null, categoria1);
+        var funkoDto = new FunkoCreateDto("nombre4", 70.89, 3, null, categoria1.getName());
 
         MockHttpServletResponse response = mockMvc.perform(
                         post(myEndpoint)
@@ -335,12 +335,12 @@ class FunkoRestControllerTest {
     @Test
     void putFunko() throws Exception {
         var localEndPoint = myEndpoint + "/1";
-        var funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", categoria1);
+        FunkoUpdateDto funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", categoria1.getName());
         when(funkoService.update(funkoDto, 1L)).thenReturn(funkoResponseDto);
         MockHttpServletResponse response = mockMvc.perform(
                         put(localEndPoint)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonFunko.write(funko1).getJson())
+                                .content(mapper.writeValueAsString(funkoDto))
                                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
         FunkoResponseDto res = mapper.readValue(response.getContentAsString(), FunkoResponseDto.class);
@@ -357,13 +357,13 @@ class FunkoRestControllerTest {
     @Test
     void putFunkoNotFound() {
         var localEndPoint = myEndpoint + "/1";
-        var funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", categoria1);
+        var funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", categoria1.getName());
         when(funkoService.update(funkoDto, 1L)).thenThrow(new FunkoNotFound("Funko no encontrado"));
         assertAll(
                 () -> assertEquals(404, mockMvc.perform(
                                 put(localEndPoint)
                                         .contentType(MediaType.APPLICATION_JSON)
-                                        .content(jsonFunko.write(funko1).getJson())
+                                        .content(mapper.writeValueAsString(funkoDto))
                                         .accept(MediaType.APPLICATION_JSON))
                         .andReturn().getResponse().getStatus())
         );
@@ -372,14 +372,14 @@ class FunkoRestControllerTest {
     @Test
     void patchFunko() throws Exception {
         var localEndPoint = myEndpoint + "/1";
-        var funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", categoria1);
+        var funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", categoria1.getName());
 
         when(funkoService.update(funkoDto, 1L)).thenReturn(funkoResponseDto);
 
         MockHttpServletResponse response = mockMvc.perform(
                         patch(localEndPoint)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonFunko.write(funko1).getJson())
+                                .content(mapper.writeValueAsString(funkoDto))
                                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
@@ -398,14 +398,14 @@ class FunkoRestControllerTest {
     @Test
     void patchFunkoNotFound() {
         var localEndPoint = myEndpoint + "/1";
-        var funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", categoria1);
+        var funkoDto = new FunkoUpdateDto("nombre4", 70.89, 3, "rutaImagen4", categoria1.getName());
 
         when(funkoService.update(funkoDto, 1L)).thenThrow(new FunkoNotFound("Funko no encontrado"));
         assertAll(
                 () -> assertEquals(404, mockMvc.perform(
                                 patch(localEndPoint)
                                         .contentType(MediaType.APPLICATION_JSON)
-                                        .content(jsonFunko.write(funko1).getJson())
+                                        .content(mapper.writeValueAsString(funkoDto))
                                         .accept(MediaType.APPLICATION_JSON))
                         .andReturn().getResponse().getStatus())
         );

@@ -213,7 +213,7 @@ class FunkoServiceImplTest {
                 .precio(70.89)
                 .cantidad(3)
                 .imagen("rutaImagen4")
-                .categoria(categoria1)
+                .categoria(categoria1.getName())
                 .build();
         Funko expectedFunko = Funko.builder()
                 .id(1L)
@@ -224,7 +224,7 @@ class FunkoServiceImplTest {
                 .categoria(categoria2)
                 .build();
 
-        when(categoryRepository.findByNameContainingIgnoreCase(funkoCreateDto.categoria().getName())).thenReturn(Optional.of(categoria1));
+        when(categoryRepository.findByNameContainingIgnoreCase(funkoCreateDto.categoria())).thenReturn(Optional.of(categoria1));
         when(funkoRepository.save(funkoArgumentCaptor.capture())).thenReturn(expectedFunko);
         when(funkoMapper.toFunko(funkoCreateDto, categoria1)).thenReturn(expectedFunko);
         when(funkoMapper.toFunkoResponseDto(expectedFunko)).thenReturn(new FunkoResponseDto(
@@ -249,7 +249,7 @@ class FunkoServiceImplTest {
                 () -> assertEquals(expectedFunko.getCategoria(), actualFunko.categoria())
         );
 
-        verify(categoryRepository, times(1)).findByNameContainingIgnoreCase(funkoCreateDto.categoria().getName());
+        verify(categoryRepository, times(1)).findByNameContainingIgnoreCase(funkoCreateDto.categoria());
         verify(funkoRepository, times(1)).save(funkoArgumentCaptor.capture());
         verify(funkoMapper, times(1)).toFunko(funkoCreateDto, categoria1);
     }
@@ -262,7 +262,7 @@ class FunkoServiceImplTest {
                 70.89,
                 3,
                 "rutaImagen4",
-                categoria1
+                categoria1.getName()
         );
         Funko existingFunko = funko1;
 
@@ -278,7 +278,7 @@ class FunkoServiceImplTest {
         );
 
         when(funkoRepository.findById(id)).thenReturn(Optional.of(existingFunko));
-        when(categoryRepository.findByNameContainingIgnoreCase(funkoUpdateRequest.categoria().getName())).thenReturn(Optional.of(categoria1));
+        when(categoryRepository.findByNameContainingIgnoreCase(funkoUpdateRequest.categoria())).thenReturn(Optional.of(categoria1));
         when(funkoRepository.save(existingFunko)).thenReturn(existingFunko);
         when(funkoMapper.toFunko(funkoUpdateRequest, funko1, categoria1)).thenReturn(existingFunko);
         when(funkoMapper.toFunkoResponseDto(existingFunko)).thenReturn(expectedFunkoResponseDto);
@@ -291,11 +291,11 @@ class FunkoServiceImplTest {
                 () -> assertEquals(funkoUpdateRequest.precio(), actualFunko.precio()),
                 () -> assertEquals(funkoUpdateRequest.cantidad(), actualFunko.cantidad()),
                 () -> assertEquals(funkoUpdateRequest.imagen(), actualFunko.imagen()),
-                () -> assertEquals(funkoUpdateRequest.categoria(), actualFunko.categoria())
+                () -> assertEquals(funkoUpdateRequest.categoria(), actualFunko.categoria().getName())
         );
 
         verify(funkoRepository, times(1)).findById(id);
-        verify(categoryRepository, times(1)).findByNameContainingIgnoreCase(funkoUpdateRequest.categoria().getName());
+        verify(categoryRepository, times(1)).findByNameContainingIgnoreCase(funkoUpdateRequest.categoria());
         verify(funkoRepository, times(1)).save(funkoArgumentCaptor.capture());
         verify(funkoMapper, times(1)).toFunko(funkoUpdateRequest, funko1, categoria1);
     }
@@ -308,7 +308,7 @@ class FunkoServiceImplTest {
                 70.89,
                 3,
                 "rutaImagen4",
-                categoria1
+                categoria1.getName()
         );
 
         when(funkoRepository.findById(id)).thenReturn(Optional.empty());

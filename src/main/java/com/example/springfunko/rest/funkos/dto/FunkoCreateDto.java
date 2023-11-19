@@ -18,7 +18,7 @@ public record FunkoCreateDto(
         Integer cantidad,
         @NotEmpty
         String imagen,
-        @NotNull
+        @NotEmpty
         String categoria
 ) {
 }
