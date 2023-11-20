@@ -9,13 +9,15 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Date;
 
-@Getter
 @Component("userSession")
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class UserStore {
+    @Getter
     @Setter
     private boolean logged = false;
+    @Getter
     private int loginCount = 0;
+    @Getter
     @Setter
     private Date lastLogin;
 
