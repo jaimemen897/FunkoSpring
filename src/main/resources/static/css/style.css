@@ -1,5 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400&family=Poppins&family=Tilt+Neon&display=swap');
 
-*{
+* {
     font-family: 'Poppins', sans-serif;
+}
+
+body {
+    margin: 0;
+    position: relative;
+    padding-bottom: 3em;
+    min-height: 100vh;
+}
+
+footer {
+    padding: 1em 0;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+#indexBody {
+    & footer {
+        position: relative;
+    }
 }

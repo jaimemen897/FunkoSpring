@@ -20,3 +20,4 @@ VALUES ('Darth Vader Funko Pop', 21.99, 30, 'http://localhost:8080/api/storage/d
 
 INSERT INTO funko (nombre, precio, cantidad, imagen, category_id)
 VALUES ('Harry Potter Funko Pop', 14.99, 60, 'http://localhost:8080/api/storage/harry_potter.jpg', 4);
+
