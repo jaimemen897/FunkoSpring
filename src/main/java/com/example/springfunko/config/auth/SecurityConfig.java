@@ -14,6 +14,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.requestMatchers("/api/storage/**").permitAll())
+                .authorizeHttpRequests(request -> request.requestMatchers("/css/**").permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers("/error/**").permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers("/funkos/**").permitAll())
                 .authorizeHttpRequests(request -> request.anyRequest().authenticated());
