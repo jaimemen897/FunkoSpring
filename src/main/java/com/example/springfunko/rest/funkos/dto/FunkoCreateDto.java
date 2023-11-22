@@ -9,16 +9,16 @@ import org.hibernate.validator.constraints.Length;
 
 @Builder
 public record FunkoCreateDto(
-        @NotBlank(message = "El nombre no puede estar vacio")
+        @NotBlank(message = "El nombre no puede estar vacío")
         @Length(min = 3, max = 50, message = "El nombre debe tener entre 3 y 50 caracteres")
         String nombre,
         @Min(value = 0, message = "El precio no puede ser negativo")
         Double precio,
         @Min(value = 0, message = "la cantidad no puede ser negativo")
         Integer cantidad,
-        @NotEmpty
+        @NotEmpty(message = "La imagen no puede estar vacia")
         String imagen,
-        @NotEmpty
+        @NotEmpty(message = "La categoria no puede estar vacia")
         String categoria
 ) {
 }
