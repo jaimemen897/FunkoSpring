@@ -3,7 +3,6 @@ package com.example.springfunko.rest.funkos.services;
 import com.example.springfunko.rest.funkos.dto.FunkoCreateDto;
 import com.example.springfunko.rest.funkos.dto.FunkoResponseDto;
 import com.example.springfunko.rest.funkos.dto.FunkoUpdateDto;
-import com.example.springfunko.rest.funkos.models.Funko;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;

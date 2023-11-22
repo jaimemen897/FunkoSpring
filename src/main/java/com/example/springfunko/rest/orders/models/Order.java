@@ -33,7 +33,7 @@ public class Order {
     @NotNull(message = "The idUser is required")
     private Long idUser;
 
-    @NotNull(message = "The idProduct is required")
+    @NotNull(message = "The client is required")
     private Client client;
 
     @NotNull(message = "The order should have at least one order line")

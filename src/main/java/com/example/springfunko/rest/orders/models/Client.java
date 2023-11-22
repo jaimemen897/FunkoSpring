@@ -17,6 +17,6 @@ public record Client(
 
         @NotNull(message = "The direction cannot be empty")
         Direction direction
-){
+) {
 
 }

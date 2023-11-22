@@ -29,3 +29,23 @@ VALUES ('Mickey Mouse Funko Pop', 12.99, 55, 'http://localhost:8080/api/storage/
 
 INSERT INTO funko (nombre, precio, cantidad, imagen, category_id)
 VALUES ('Wonder Woman Funko Pop', 17.99, 45, 'http://localhost:8080/api/storage/wonder_woman.jpg', 3);
+
+-- Contraseña: Admin1
+INSERT INTO USERS (name, surnames, username, email, password)
+VALUES ('admin', 'admin', 'admin', 'admin@gmail.com', '$2a$10$vPaqZvZkz6jhb7U7k/V/v.5vprfNdOnh4sxi/qpPRkYTzPmFlI9p2');
+INSERT INTO USER_ROLES (user_id, roles)
+VALUES (1, 'ADMIN');
+
+-- Contraseña: User1
+insert into USERS (name, surnames, username, email, password)
+values ('User', 'User User', 'user', 'user@prueba.net',
+        '$2a$12$RUq2ScW1Kiizu5K4gKoK4OTz80.DWaruhdyfi2lZCB.KeuXTBh0S.');
+INSERT INTO USER_ROLES (user_id, roles)
+VALUES (2, 'USER');
+
+-- Contraseña: Test1
+insert into USERS (name, surnames, username, email, password)
+values ('Test', 'Test Test', 'test', 'test@prueba.net',
+        '$2a$10$Pd1yyq2NowcsDf4Cpf/ZXObYFkcycswqHAqBndE1wWJvYwRxlb.Pu');
+INSERT INTO USER_ROLES (user_id, roles)
+VALUES (3, 'USER');

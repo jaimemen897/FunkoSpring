@@ -8,6 +8,7 @@ import com.example.springfunko.rest.funkos.dto.FunkoUpdateDto;
 import com.example.springfunko.rest.funkos.exception.FunkoNotFound;
 import com.example.springfunko.rest.funkos.models.Funko;
 import com.example.springfunko.rest.funkos.services.FunkoServiceImpl;
+import com.example.springfunko.utils.pagination.PageResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -20,12 +21,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import com.example.springfunko.utils.pagination.PageResponse;
-
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -101,7 +98,8 @@ class FunkoRestControllerTest {
                                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
-        PageResponse<FunkoResponseDto> res = mapper.readValue(response.getContentAsString(), new TypeReference<>(){});
+        PageResponse<FunkoResponseDto> res = mapper.readValue(response.getContentAsString(), new TypeReference<>() {
+        });
 
         assertAll(
                 () -> assertEquals(200, response.getStatus()),
@@ -128,7 +126,7 @@ class FunkoRestControllerTest {
                                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
-        PageResponse<FunkoResponseDto> res = mapper.readValue(response.getContentAsString(), new TypeReference<>(){
+        PageResponse<FunkoResponseDto> res = mapper.readValue(response.getContentAsString(), new TypeReference<>() {
         });
 
         assertAll(
@@ -155,7 +153,8 @@ class FunkoRestControllerTest {
                                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
-        PageResponse<FunkoResponseDto> res = mapper.readValue(response.getContentAsString(), new TypeReference<>(){});
+        PageResponse<FunkoResponseDto> res = mapper.readValue(response.getContentAsString(), new TypeReference<>() {
+        });
 
         assertAll(
                 () -> assertEquals(200, response.getStatus()),
@@ -183,7 +182,8 @@ class FunkoRestControllerTest {
                                 .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
-        PageResponse<FunkoResponseDto> res = mapper.readValue(response.getContentAsString(), new TypeReference<>(){});
+        PageResponse<FunkoResponseDto> res = mapper.readValue(response.getContentAsString(), new TypeReference<>() {
+        });
 
         assertAll(
                 () -> assertEquals(200, response.getStatus()),
