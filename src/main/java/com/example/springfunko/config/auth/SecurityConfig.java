@@ -37,7 +37,9 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authorizeHttpRequests(request -> request.requestMatchers("/api/storage/**").permitAll())
+                .authorizeHttpRequests(request -> request.requestMatchers("/api/auth/**").permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers("/static/**").permitAll())
+                .authorizeHttpRequests(request -> request.requestMatchers("/css/**").permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers("/error/**").permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers("/funkos/**").permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers("/ws/**").permitAll())
@@ -48,12 +50,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());

@@ -58,7 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         if (StringUtils.hasText(userName)
                 && SecurityContextHolder.getContext().getAuthentication() == null) {
-            log.info("Comprobando usuario y token");
+            log.info("Checking user and token validity");
             try {
                 userDetails = authUsersService.loadUserByUsername(userName);
             } catch (Exception e) {

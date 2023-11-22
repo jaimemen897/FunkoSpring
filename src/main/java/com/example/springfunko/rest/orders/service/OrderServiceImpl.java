@@ -138,9 +138,9 @@ public class OrderServiceImpl implements OrderService {
         });
     }
 
-    Order returnStockOrders(Order order){
+    Order returnStockOrders(Order order) {
         log.info("Return stock for order: {}", order);
-        if (order.getOrderLines() != null){
+        if (order.getOrderLines() != null) {
             order.getOrderLines().forEach(orderLine -> {
                 var funko = funkoRepository.findById(orderLine.getIdFunko()).get();
                 funko.setCantidad(funko.getCantidad() + orderLine.getQuantity());

@@ -15,7 +15,6 @@ import com.example.springfunko.rest.funkos.services.FunkoServiceImpl;
 import com.example.springfunko.rest.storage.services.StorageService;
 import com.example.springfunko.websockets.notifications.mapper.FunkoNotificationMapper;
 import com.example.springfunko.websockets.notifications.models.Notification;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,7 +82,7 @@ class FunkoServiceImplTest {
     private ArgumentCaptor<Funko> funkoArgumentCaptor;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         funkoServiceImpl.setWebSocketService(webSocketHandlerMock);
     }
 
@@ -117,8 +117,8 @@ class FunkoServiceImplTest {
         Optional<String> categoria = Optional.of("Disney");
         Optional<Double> precioMax = Optional.empty();
 
-        List<Funko> expectedFunkos = Arrays.asList(funko1);
-        List<FunkoResponseDto> expectedFunkosResponseDto = Arrays.asList(funkoResponseDto);
+        List<Funko> expectedFunkos = Collections.singletonList(funko1);
+        List<FunkoResponseDto> expectedFunkosResponseDto = Collections.singletonList(funkoResponseDto);
         Pageable pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
         Page<Funko> expectedPage = new PageImpl<>(expectedFunkos);
 
@@ -142,8 +142,8 @@ class FunkoServiceImplTest {
         Optional<String> categoria = Optional.empty();
         Optional<Double> precioMax = Optional.empty();
 
-        List<Funko> expectedFunkos = Arrays.asList(funko1);
-        List<FunkoResponseDto> expectedFunkosResponseDto = Arrays.asList(funkoResponseDto);
+        List<Funko> expectedFunkos = Collections.singletonList(funko1);
+        List<FunkoResponseDto> expectedFunkosResponseDto = Collections.singletonList(funkoResponseDto);
         Pageable pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
         Page<Funko> expectedPage = new PageImpl<>(expectedFunkos);
 
@@ -167,8 +167,8 @@ class FunkoServiceImplTest {
         Optional<String> categoria = Optional.empty();
         Optional<Double> precioMax = Optional.of(70.89);
 
-        List<Funko> expectedFunkos = Arrays.asList(funko1);
-        List<FunkoResponseDto> expectedFunkosResponseDto = Arrays.asList(funkoResponseDto);
+        List<Funko> expectedFunkos = Collections.singletonList(funko1);
+        List<FunkoResponseDto> expectedFunkosResponseDto = Collections.singletonList(funkoResponseDto);
         Pageable pageable = PageRequest.of(0, 10, Sort.by("id").ascending());
         Page<Funko> expectedPage = new PageImpl<>(expectedFunkos);
 
@@ -367,7 +367,7 @@ class FunkoServiceImplTest {
     }
 
     @Test
-    void onChange() throws IOException{
+    void onChange() throws IOException {
         doNothing().when(webSocketHandlerMock).sendMessage(any(String.class));
         funkoServiceImpl.onChange(Notification.Tipo.CREATE, funko1);
     }

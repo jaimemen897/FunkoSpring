@@ -1,12 +1,13 @@
 package com.example.springfunko.rest.auth.services.users;
 
 import com.example.springfunko.rest.auth.repositories.AuthUsersRepository;
+import com.example.springfunko.rest.users.exceptions.UserNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service("userDetailsService")
-public class AuthUsersServiceImpl implements AuthUsersService{
+public class AuthUsersServiceImpl implements AuthUsersService {
     private final AuthUsersRepository authUsersRepository;
 
     @Autowired
@@ -15,7 +16,7 @@ public class AuthUsersServiceImpl implements AuthUsersService{
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UserNotFound{
+    public UserDetails loadUserByUsername(String username) throws UserNotFound {
         return authUsersRepository.findByUsername(username).orElseThrow(() -> new UserNotFound("User with username " + username + " not found"));
     }
 }

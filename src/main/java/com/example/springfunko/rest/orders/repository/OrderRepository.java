@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface OrderRepository extends MongoRepository<Order, ObjectId>{
+public interface OrderRepository extends MongoRepository<Order, ObjectId> {
     Page<Order> findByIdUser(Long idUser, Pageable pageable);
 
     List<Order> findOrderIdsByIdUser(Long idUser);

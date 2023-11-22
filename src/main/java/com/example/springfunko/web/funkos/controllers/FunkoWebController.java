@@ -32,12 +32,12 @@ import java.util.stream.Stream;
 @RequestMapping(path = {"/funkos", ""})
 @Slf4j
 public class FunkoWebController {
-    private final FunkoServiceImpl funkoService;
-    private final CategoryService categoryService;
-    private final UserStore userSession;
     private static final String REDIRECT_FUNKOS = "redirect:/funkos";
     private static final String USER_NOT_LOGGED = "User not logged";
     private static final String LOGIN = "/login";
+    private final FunkoServiceImpl funkoService;
+    private final CategoryService categoryService;
+    private final UserStore userSession;
 
     @Autowired
     public FunkoWebController(FunkoServiceImpl funkoService, CategoryService categoryService, UserStore userSession) {

@@ -8,6 +8,7 @@ import com.example.springfunko.rest.auth.exceptions.UserAuthNameOrEmailExisten;
 import com.example.springfunko.rest.auth.exceptions.UserDiferentPassword;
 import com.example.springfunko.rest.auth.repositories.AuthUsersRepository;
 import com.example.springfunko.rest.auth.services.jwt.JwtService;
+import com.example.springfunko.rest.users.models.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.example.springfunko.rest.users.models.Role.USER;
 
 @Service
 @Slf4j
@@ -36,16 +39,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public JwtAuthReponse signUp(UserSignUpRequest request) {
+    public JwtAuthResponse signUp(UserSignUpRequest request) {
         log.info("Signing up user: {}", request);
         if (request.getPassword().contentEquals(request.getPasswordCheck())) {
             User user = User.builder()
                     .username(request.getUsername())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .email(request.getEmail())
-                    .nombre(request.getName())
-                    .apellidos(request.getSurnames())
-                    .roles(Stream.of(Role.USER).collect(Collectors.toSet()))
+                    .name(request.getName())
+                    .surnames(request.getSurnames())
+                    .roles(Stream.of(USER).collect(Collectors.toSet()))
                     .build();
             try {
                 var userStored = authUsersRepository.save(user);
@@ -59,7 +62,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public JwtAuthReponse signIn(UserSignInRequest request) {
+    public JwtAuthResponse signIn(UserSignInRequest request) {
         log.info("Signing in user: {}", request);
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         var user = authUsersRepository.findByUsername(request.getUsername()).orElseThrow(() -> new AuthSignInInvalid("User or password invalid"));

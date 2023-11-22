@@ -1,4 +1,4 @@
-package com.example.springfunko.rest.auth.dto;
+package com.example.springfunko.rest.users.dto;
 
 import com.example.springfunko.rest.users.models.Role;
 import lombok.AllArgsConstructor;
@@ -20,5 +20,6 @@ public class UserResponse {
     private String email;
     @Builder.Default
     private Set<Role> roles = Set.of(Role.USER);
+    @Builder.Default
+    private Boolean isDeleted = false;
 }
-
