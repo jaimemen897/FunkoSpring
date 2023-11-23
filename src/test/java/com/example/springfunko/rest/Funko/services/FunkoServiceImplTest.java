@@ -1,4 +1,4 @@
-package com.example.springfunko.Funko.services;
+package com.example.springfunko.rest.Funko.services;
 
 import com.example.springfunko.config.websockets.WebSocketConfig;
 import com.example.springfunko.config.websockets.WebSocketHandler;

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/pedidos")
 @Slf4j
+@PreAuthorize("hasRole('USER')")
 public class OrderRestController {
     private final OrderService orderService;
     private final PaginationLinksUtils paginationLinksUtils;
@@ -75,18 +77,21 @@ public class OrderRestController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order) {
         log.info("Creating order {}", order);
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.save(order));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Order> updateOrder(@PathVariable("id") ObjectId id, @Valid @RequestBody Order order) {
         log.info("Updating order with id {}", id);
         return ResponseEntity.ok(orderService.update(id, order));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteOrder(@PathVariable("id") ObjectId id) {
         log.info("Deleting order with id {}", id);
         orderService.delete(id);

@@ -48,7 +48,7 @@ public class UsersRestController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')") // Solo los admin pueden acceder
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PageResponse<UserResponse>> findAll(
             @RequestParam(required = false) Optional<String> username,
             @RequestParam(required = false) Optional<String> email,

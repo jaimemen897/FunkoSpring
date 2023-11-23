@@ -1,5 +1,4 @@
-package com.example.springfunko.Funko.controller;
-
+package com.example.springfunko.rest.Funko.controller;
 
 import com.example.springfunko.rest.category.models.Categoria;
 import com.example.springfunko.rest.funkos.dto.FunkoCreateDto;
@@ -27,6 +26,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,6 +44,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
 @ExtendWith(MockitoExtension.class)
+@WithMockUser(username = "admin", password = "admin", roles = {"ADMIN", "USER"})
 class FunkoRestControllerTest {
     private final ObjectMapper mapper = new ObjectMapper();
     private final String myEndpoint = "/api/funkos";
@@ -72,8 +74,6 @@ class FunkoRestControllerTest {
     MockMvc mockMvc;
     @MockBean
     private FunkoServiceImpl funkoService;
-    @Autowired
-    private JacksonTester<Funko> jsonFunko;
 
     @Autowired
     public FunkoRestControllerTest(FunkoServiceImpl funkoService) {

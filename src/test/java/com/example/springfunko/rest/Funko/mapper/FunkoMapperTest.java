@@ -1,4 +1,4 @@
-package com.example.springfunko.Funko.mapper;
+package com.example.springfunko.rest.Funko.mapper;
 
 import com.example.springfunko.rest.category.models.Categoria;
 import com.example.springfunko.rest.funkos.dto.FunkoCreateDto;

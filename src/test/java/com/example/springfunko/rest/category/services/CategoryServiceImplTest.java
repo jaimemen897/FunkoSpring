@@ -1,4 +1,4 @@
-package com.example.springfunko.category.services;
+package com.example.springfunko.rest.category.services;
 
 import com.example.springfunko.rest.category.dto.CategoryResponseDto;
 import com.example.springfunko.rest.category.exception.CategoryConflict;

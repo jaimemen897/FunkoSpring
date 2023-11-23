@@ -40,10 +40,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request.requestMatchers("/api/auth/**").permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers("/static/**").permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers("/css/**").permitAll())
-                .authorizeHttpRequests(request -> request.requestMatchers("/error/**").permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers("/funkos/**").permitAll())
+                .authorizeHttpRequests(request -> request.requestMatchers("/error/**").permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers("/ws/**").permitAll())
-                //authorizeHttpRequests(request -> request.requestMatchers("/api/**").permitAll())
                 .authorizeHttpRequests(request -> request.anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

@@ -1,4 +1,4 @@
-package com.example.springfunko.category.controller;
+package com.example.springfunko.rest.category.controller;
 
 import com.example.springfunko.rest.category.dto.CategoryResponseDto;
 import com.example.springfunko.rest.category.exception.CategoryNotFound;
@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -37,6 +38,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
 @ExtendWith(MockitoExtension.class)
+@WithMockUser(username = "admin", password = "admin", roles = {"ADMIN", "USER"})
 class CategoryControllerTest {
     private final String BASE_URL = "/api/categorias";
     private final Categoria categoria = Categoria.builder().name("Categoria 1").build();

@@ -1,4 +1,4 @@
-package com.example.springfunko.category.mappers;
+package com.example.springfunko.rest.category.mappers;
 
 import com.example.springfunko.rest.category.dto.CategoryResponseDto;
 import com.example.springfunko.rest.category.mappers.CategoryMapper;

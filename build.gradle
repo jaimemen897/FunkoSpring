@@ -22,23 +22,34 @@ repositories {
 }
 
 dependencies {
+	// SPRING
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	// LOMBOK
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	//CACHE
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// VALIDATION
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	//JACKSON
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+	//JPA
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	// WEB SOCKET
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	// H2
 	implementation 'com.h2database:h2'
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+	// MONGODB
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	// WEB
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	// SECURITY
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.springframework.security:spring-security-test'
+	// JWT
 	implementation 'com.auth0:java-jwt:4.4.0'
 }
 

@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/categorias")
 @Slf4j
+@PreAuthorize("hasRole('USER')")
 public class CategoryController {
     private final CategoryService categoryService;
     private final PaginationLinksUtils paginationLinksUtils;
@@ -61,16 +63,19 @@ public class CategoryController {
     }
 
     @PostMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Categoria> save(@Valid @RequestBody CategoryResponseDto categoria) {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.save(categoria));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Categoria> update(@Valid @RequestBody CategoryResponseDto categoria, @PathVariable Long id) {
         return ResponseEntity.ok(categoryService.update(categoria, id));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         categoryService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
