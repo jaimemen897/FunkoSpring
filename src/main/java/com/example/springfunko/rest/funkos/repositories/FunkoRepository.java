@@ -1,7 +1,6 @@
 package com.example.springfunko.rest.funkos.repositories;
 
 import com.example.springfunko.rest.funkos.models.Funko;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

@@ -6,6 +6,11 @@ import com.example.springfunko.rest.funkos.dto.FunkoUpdateDto;
 import com.example.springfunko.rest.funkos.services.FunkoServiceImpl;
 import com.example.springfunko.utils.pagination.PageResponse;
 import com.example.springfunko.utils.pagination.PaginationLinksUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -58,6 +63,20 @@ public class FunkoRestController {
     }
 
     @GetMapping()
+    @Operation(summary = "Obtener una lista paginada de Funkos", description = "Obtener una lista paginada de Funkos", tags = {"funkos"})
+    @Parameters({
+            @Parameter(name = "nombre", description = "Nombre del funko", example = "Batman"),
+            @Parameter(name = "categoria", description = "Categoria del funko", example = "DC"),
+            @Parameter(name = "precioMax", description = "Precio maximo del funko", example = "100.0"),
+            @Parameter(name = "page", description = "Numero de pagina", example = "0"),
+            @Parameter(name = "size", description = "Numero de elementos por pagina", example = "10"),
+            @Parameter(name = "sortBy", description = "Campo por el que se ordena", example = "id"),
+            @Parameter(name = "direction", description = "Direccion de la ordenacion", example = "asc")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de Funkos paginada"),
+            @ApiResponse(responseCode = "400", description = "Error en la peticion")
+    })
     public ResponseEntity<PageResponse<FunkoResponseDto>> getFunkos(
             @RequestParam(required = false) Optional<String> nombre,
             @RequestParam(required = false) Optional<String> categoria,
@@ -77,6 +96,15 @@ public class FunkoRestController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Obtener un funko por su id", description = "Obtener un funko por su id", tags = {"funkos"})
+    @Parameters({
+            @Parameter(name = "id", description = "Id del funko", example = "1")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Funko encontrado"),
+            @ApiResponse(responseCode = "400", description = "Error en la peticion"),
+            @ApiResponse(responseCode = "404", description = "Funko no encontrado")
+    })
     @Min(value = 0, message = "El id no puede ser negativo")
     public ResponseEntity<FunkoResponseDto> getFunkoById(@PathVariable Integer id) {
         return ResponseEntity.ok(funkoService.findById(id));
@@ -84,6 +112,14 @@ public class FunkoRestController {
 
     @NonNull
     @PostMapping()
+    @Operation(summary = "Crear un funko", description = "Crear un funko", tags = {"funkos"})
+    @Parameters({
+            @Parameter(name = "funko", description = "Funko a crear", example = "{'nombre': 'Batman', 'categoria': 'DC', 'precio': 100.0}")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Funko creado"),
+            @ApiResponse(responseCode = "400", description = "Error en la peticion")
+    })
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<FunkoResponseDto> postFunko(@Valid @RequestBody FunkoCreateDto funko) {
         return ResponseEntity.status(HttpStatus.CREATED).body(funkoService.save(funko));
@@ -91,6 +127,16 @@ public class FunkoRestController {
 
     @NonNull
     @PutMapping("/{id}")
+    @Operation(summary = "Actualizar un funko", description = "Actualizar un funko", tags = {"funkos"})
+    @Parameters({
+            @Parameter(name = "id", description = "Id del funko", example = "1"),
+            @Parameter(name = "funko", description = "Funko a actualizar", example = "{'nombre': 'Batman', 'categoria': 'DC', 'precio': 100.0}")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Funko actualizado"),
+            @ApiResponse(responseCode = "400", description = "Error en la peticion"),
+            @ApiResponse(responseCode = "404", description = "Funko no encontrado")
+    })
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<FunkoResponseDto> putFunko(@PathVariable Long id, @Valid @RequestBody FunkoUpdateDto funko) {
         return ResponseEntity.ok(funkoService.update(funko, id));
@@ -98,6 +144,16 @@ public class FunkoRestController {
 
     @NonNull
     @PatchMapping("/{id}")
+    @Operation(summary = "Actualizar un funko", description = "Actualizar un funko", tags = {"funkos"})
+    @Parameters({
+            @Parameter(name = "id", description = "Id del funko", example = "1"),
+            @Parameter(name = "funko", description = "Funko a actualizar", example = "{'nombre': 'Batman', 'categoria': 'DC', 'precio': 100.0}")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Funko actualizado"),
+            @ApiResponse(responseCode = "400", description = "Error en la peticion"),
+            @ApiResponse(responseCode = "404", description = "Funko no encontrado")
+    })
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<FunkoResponseDto> patchFunko(@PathVariable Long id, @Valid @RequestBody FunkoUpdateDto funko) {
         return ResponseEntity.ok(funkoService.update(funko, id));
@@ -105,6 +161,16 @@ public class FunkoRestController {
 
     @NonNull
     @PatchMapping(value = "/imagen/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Actualizar la imagen de un funko", description = "Actualizar la imagen de un funko", tags = {"funkos"})
+    @Parameters({
+            @Parameter(name = "id", description = "Id del funko", example = "1"),
+            @Parameter(name = "file", description = "Imagen del funko", example = "funko.jpg")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Funko actualizado"),
+            @ApiResponse(responseCode = "400", description = "Error en la peticion"),
+            @ApiResponse(responseCode = "404", description = "Funko no encontrado")
+    })
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<FunkoResponseDto> patchFunko(@PathVariable Long id, @RequestPart("file") MultipartFile file) {
         if (!Objects.requireNonNull(file.getContentType()).startsWith("image/")) {
@@ -115,6 +181,15 @@ public class FunkoRestController {
 
     @Min(value = 0, message = "El id no puede ser negativo")
     @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar un funko", description = "Eliminar un funko", tags = {"funkos"})
+    @Parameters({
+            @Parameter(name = "id", description = "Id del funko", example = "1")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Funko eliminado"),
+            @ApiResponse(responseCode = "400", description = "Error en la peticion"),
+            @ApiResponse(responseCode = "404", description = "Funko no encontrado")
+    })
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteFunko(@Valid @PathVariable int id) {
         funkoService.deleteById(id);

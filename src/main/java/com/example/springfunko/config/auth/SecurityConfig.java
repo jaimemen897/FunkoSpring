@@ -43,6 +43,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request.requestMatchers("/funkos/**").permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers("/error/**").permitAll())
                 .authorizeHttpRequests(request -> request.requestMatchers("/ws/**").permitAll())
+                .authorizeHttpRequests(request -> request.requestMatchers("/swagger-ui/**").permitAll())
+                .authorizeHttpRequests(request -> request.requestMatchers("/v3/api-docs/**").permitAll())
                 .authorizeHttpRequests(request -> request.anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider()).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
