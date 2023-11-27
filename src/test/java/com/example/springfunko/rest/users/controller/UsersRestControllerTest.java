@@ -84,7 +84,7 @@ class UsersRestControllerTest {
             .id(new ObjectId("5f9c7b9b9c6b9e1d7c9d9c9d"))
             .client(client)
             .orderLines(List.of(orderLine))
-            .idUser(99L)
+            .idUser(2L)
             .build();
 
     private final String BASE_URL = "/api/users";
@@ -708,6 +708,7 @@ class UsersRestControllerTest {
     @WithUserDetails("user")
     void deletePedido() throws Exception {
         var LOCAL_URL = BASE_URL + "/me/pedidos/" + order.getId();
+        when(orderService.findById(any(ObjectId.class))).thenReturn(order);
         doNothing().when(orderService).delete(any(ObjectId.class));
 
         MockHttpServletResponse response = mockMvc.perform(

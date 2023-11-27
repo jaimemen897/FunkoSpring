@@ -5,6 +5,9 @@ import com.example.springfunko.rest.orders.service.OrderService;
 import com.example.springfunko.rest.users.dto.UserInfoResponse;
 import com.example.springfunko.rest.users.dto.UserRequest;
 import com.example.springfunko.rest.users.dto.UserResponse;
+import com.example.springfunko.rest.users.exceptions.UnauthorizedUser;
+import com.example.springfunko.rest.users.exceptions.UserNameOrEmailExists;
+import com.example.springfunko.rest.users.exceptions.UserNotFound;
 import com.example.springfunko.rest.users.models.User;
 import com.example.springfunko.rest.users.services.UsersService;
 import com.example.springfunko.utils.pagination.PageResponse;
@@ -174,6 +177,11 @@ public class UsersRestController {
             @PathVariable("id") ObjectId idPedido
     ) {
         log.info("Borrando pedido con id: " + idPedido);
+
+        Order order = orderService.findById(idPedido);
+        if (!order.getIdUser().equals(user.getId())) {
+            throw new UnauthorizedUser("El usuario no es el propietario del pedido");
+        }
         orderService.delete(idPedido);
         return ResponseEntity.noContent().build();
     }

@@ -54,12 +54,10 @@ public class UsersServiceImpl implements UsersService {
                 isDeleted.map(m -> criteriaBuilder.equal(root.get("isDeleted"), m))
                         .orElseGet(() -> criteriaBuilder.isTrue(criteriaBuilder.literal(true)));
 
-        // Combinamos las especificaciones
         Specification<User> criterio = Specification.where(specUsernameUser)
                 .and(specEmailUser)
                 .and(specIsDeleted);
 
-        // Debe devolver un Page, por eso usamos el findAll de JPA
         return usersRepository.findAll(criterio, pageable).map(usersMapper::toUserResponse);
     }
 
@@ -67,9 +65,7 @@ public class UsersServiceImpl implements UsersService {
     @Cacheable(key = "#id")
     public UserInfoResponse findById(Long id) {
         log.info("Search user by id {}", id);
-        // Buscamos el usuario
         var user = usersRepository.findById(id).orElseThrow(() -> new UserNotFound(id));
-        // Buscamos sus pedidos
         var pedidos = orderRepository.findOrderIdsByIdUser(id).stream().map(p -> p.getId().toHexString()).toList();
         return usersMapper.toUserInfoResponse(user, pedidos);
     }
@@ -78,7 +74,6 @@ public class UsersServiceImpl implements UsersService {
     @CachePut(key = "#result.id")
     public UserResponse save(UserRequest userRequest) {
         log.info("Saving user: " + userRequest);
-        // No debe existir otro con el mismo username o email
         usersRepository.findByUsernameEqualsIgnoreCaseOrEmailEqualsIgnoreCase(userRequest.getUsername(), userRequest.getEmail())
                 .ifPresent(u -> {
                     throw new UserNameOrEmailExists("Already exists a user with username " + u.getUsername() + " or email " + u.getEmail());
@@ -91,7 +86,6 @@ public class UsersServiceImpl implements UsersService {
     public UserResponse update(Long id, UserRequest userRequest) {
         log.info("Updating user: " + userRequest);
         usersRepository.findById(id).orElseThrow(() -> new UserNotFound(id));
-        // No debe existir otro con el mismo username o email, y si existe soy yo mismo
         usersRepository.findByUsernameEqualsIgnoreCaseOrEmailEqualsIgnoreCase(userRequest.getUsername(), userRequest.getEmail())
                 .ifPresent(u -> {
                     if (!u.getId().equals(id)) {
@@ -108,13 +102,10 @@ public class UsersServiceImpl implements UsersService {
     public void deleteById(Long id) {
         log.info("Deleting user by id: " + id);
         User user = usersRepository.findById(id).orElseThrow(() -> new UserNotFound(id));
-        //Hacemos el borrado fisico si no hay pedidos
         if (orderRepository.existsByIdUser(id)) {
-            // Si no, lo marcamos como borrado lógico
             log.info("Logical delete of user by id: " + id);
             usersRepository.updateIsDeletedToTrueById(id);
         } else {
-            // Si hay pedidos, lo borramos físicamente
             log.info("Physical delete of user by id: " + id);
             usersRepository.delete(user);
         }
