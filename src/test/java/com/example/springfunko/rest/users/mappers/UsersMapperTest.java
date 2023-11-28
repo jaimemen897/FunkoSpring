@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UsersMapperTest {
     private final UsersMapper usersMapper = new UsersMapper();
@@ -17,7 +17,7 @@ class UsersMapperTest {
 
     @Test
     void toUser() {
-        UserRequest userRequest = new UserRequest("name", "surnames", "username", "email", "password",new HashSet<>(List.of(Role.USER)), false);
+        UserRequest userRequest = new UserRequest("name", "surnames", "username", "email", "password", new HashSet<>(List.of(Role.USER)), false);
         var res = usersMapper.toUser(userRequest);
 
         assertAll(
@@ -34,7 +34,7 @@ class UsersMapperTest {
 
     @Test
     void testToUser() {
-        UserRequest userRequest = new UserRequest("name", "surnames", "username", "email", "password",null, false);
+        UserRequest userRequest = new UserRequest("name", "surnames", "username", "email", "password", null, false);
         var res = usersMapper.toUser(userRequest, 1L);
 
         assertAll(

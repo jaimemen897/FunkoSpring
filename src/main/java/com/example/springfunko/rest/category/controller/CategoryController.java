@@ -27,7 +27,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/categorias")
 @Slf4j
-@PreAuthorize("hasRole('USER')")
 public class CategoryController {
     private final CategoryService categoryService;
     private final PaginationLinksUtils paginationLinksUtils;

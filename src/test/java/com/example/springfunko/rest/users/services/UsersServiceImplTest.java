@@ -81,7 +81,7 @@ class UsersServiceImplTest {
     }
 
     @Test
-    void findByIdNotFound(){
+    void findByIdNotFound() {
         Long userId = 1L;
         when(usersRepository.findById(userId)).thenReturn(Optional.empty());
         assertThrows(UserNotFound.class, () -> usersService.findById(userId));
@@ -110,7 +110,7 @@ class UsersServiceImplTest {
     }
 
     @Test
-    void saveDuplicateUsername(){
+    void saveDuplicateUsername() {
         when(usersRepository.findByUsernameEqualsIgnoreCaseOrEmailEqualsIgnoreCase(anyString(), anyString())).thenReturn(Optional.of(user));
         assertThrows(UserNameOrEmailExists.class, () -> usersService.save(userRequest));
         verify(usersRepository, times(1)).findByUsernameEqualsIgnoreCaseOrEmailEqualsIgnoreCase(anyString(), anyString());
@@ -141,7 +141,7 @@ class UsersServiceImplTest {
     }
 
     @Test
-    void updateDuplicateUsername(){
+    void updateDuplicateUsername() {
         Long userId = 1L;
         when(usersRepository.findById(userId)).thenReturn(Optional.of(user));
         when(usersRepository.findByUsernameEqualsIgnoreCaseOrEmailEqualsIgnoreCase(anyString(), anyString())).thenReturn(Optional.of(user));
@@ -151,7 +151,7 @@ class UsersServiceImplTest {
     }
 
     @Test
-    void updateNotFound(){
+    void updateNotFound() {
         Long userId = 1L;
         when(usersRepository.findById(userId)).thenReturn(Optional.empty());
         assertThrows(UserNotFound.class, () -> usersService.update(userId, userRequest));
@@ -179,7 +179,7 @@ class UsersServiceImplTest {
     }
 
     @Test
-    void deleteByIdNotFound(){
+    void deleteByIdNotFound() {
         Long userId = 1L;
         User user = new User();
         when(usersRepository.findById(userId)).thenReturn(Optional.of(user));

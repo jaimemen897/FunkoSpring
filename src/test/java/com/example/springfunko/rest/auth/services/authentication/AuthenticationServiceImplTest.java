@@ -119,7 +119,7 @@ class AuthenticationServiceImplTest {
     }
 
     @Test
-    void signInNotFound(){
+    void signInNotFound() {
         UserSignInRequest request = new UserSignInRequest();
         request.setUsername("testuser");
         request.setPassword("password");

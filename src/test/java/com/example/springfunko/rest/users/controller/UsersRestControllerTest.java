@@ -74,6 +74,8 @@ class UsersRestControllerTest {
             .username("test")
             .email("test@test.com")
             .build();
+    private final String BASE_URL = "/api/users";
+    private final ObjectMapper mapper = new ObjectMapper();
     Client client = new Client("cliente", "cliente@test.com", "123456789", new Direction("Calle", "Ciudad", "CP", "Pais", "Estado", "CodigoPostal"));
     OrderLine orderLine = OrderLine.builder()
             .idFunko(99L)
@@ -86,9 +88,6 @@ class UsersRestControllerTest {
             .orderLines(List.of(orderLine))
             .idUser(2L)
             .build();
-
-    private final String BASE_URL = "/api/users";
-    private final ObjectMapper mapper = new ObjectMapper();
     @Autowired
     MockMvc mockMvc;
 
@@ -575,7 +574,6 @@ class UsersRestControllerTest {
     }
 
 
-
     @Test
     @WithAnonymousUser
     void me_AnonymousUser() throws Exception {
@@ -652,7 +650,7 @@ class UsersRestControllerTest {
     @WithUserDetails("user")
     void getPedido() throws Exception {
         var LOCAL_URL = BASE_URL + "/me/pedidos/" + order.getId();
-        
+
         when(orderService.findById(any(ObjectId.class))).thenReturn(order);
 
         MockHttpServletResponse response = mockMvc.perform(
@@ -670,7 +668,7 @@ class UsersRestControllerTest {
     @WithUserDetails("user")
     void savePedido() throws Exception {
         var LOCAL_URL = BASE_URL + "/me/pedidos";
-        
+
         when(orderService.save(any(Order.class))).thenReturn(order);
 
         MockHttpServletResponse response = mockMvc.perform(

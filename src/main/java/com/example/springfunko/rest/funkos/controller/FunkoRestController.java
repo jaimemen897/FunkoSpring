@@ -38,7 +38,6 @@ import java.util.Optional;
 @RequestMapping("/api/funkos")
 @RestController
 @Slf4j
-@PreAuthorize("hasRole('USER')")
 public class FunkoRestController {
 
     private final FunkoServiceImpl funkoService;

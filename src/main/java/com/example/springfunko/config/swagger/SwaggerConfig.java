@@ -37,7 +37,7 @@ class SwaggerConfig {
                 .addSecurityItem(new SecurityRequirement().
                         addList("Bearer Authentication"))
                 .components(new Components().addSecuritySchemes
-                ("Bearer Authentication", createAPIKeyScheme()));
+                        ("Bearer Authentication", createAPIKeyScheme()));
     }
 
 

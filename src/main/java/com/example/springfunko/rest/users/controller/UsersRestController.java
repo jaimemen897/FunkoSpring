@@ -6,8 +6,6 @@ import com.example.springfunko.rest.users.dto.UserInfoResponse;
 import com.example.springfunko.rest.users.dto.UserRequest;
 import com.example.springfunko.rest.users.dto.UserResponse;
 import com.example.springfunko.rest.users.exceptions.UnauthorizedUser;
-import com.example.springfunko.rest.users.exceptions.UserNameOrEmailExists;
-import com.example.springfunko.rest.users.exceptions.UserNotFound;
 import com.example.springfunko.rest.users.models.User;
 import com.example.springfunko.rest.users.services.UsersService;
 import com.example.springfunko.utils.pagination.PageResponse;
