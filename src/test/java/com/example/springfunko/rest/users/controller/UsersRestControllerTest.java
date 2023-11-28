@@ -559,7 +559,7 @@ class UsersRestControllerTest {
     }
 
     @Test
-    @WithUserDetails("admin")
+    @WithUserDetails("user")
     void me() throws Exception {
         var LOCAL_URL = BASE_URL + "/me/profile";
         when(usersService.findById(anyLong())).thenReturn(userInfoResponse);
