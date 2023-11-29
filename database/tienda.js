@@ -1,3 +1,15 @@
+db.createUser({
+    user: 'admin',
+    pwd: 'adminPassword123',
+    roles: [
+        {
+            role: 'readWrite',
+            db: 'orders',
+        },
+    ],
+});
+
+
 db.createCollection('orders');
 
 db = db.getSiblingDB('orders');

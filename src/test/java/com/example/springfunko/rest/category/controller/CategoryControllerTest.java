@@ -26,6 +26,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,11 +39,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
 @ExtendWith(MockitoExtension.class)
-@WithMockUser(username = "admin", password = "admin", roles = {"ADMIN", "USER"})
+@WithMockUser(username = "admin", password = "adminPassword123", roles = {"ADMIN", "USER"})
 class CategoryControllerTest {
     private final String BASE_URL = "/api/categorias";
-    private final Categoria categoria = Categoria.builder().name("Categoria 1").build();
-    private final Categoria categoria2 = Categoria.builder().name("Categoria 2").build();
+    private final Categoria categoria = Categoria.builder().name("Categoria 1").createdAt(LocalDateTime.now()).build();
+    private final Categoria categoria2 = Categoria.builder().name("Categoria 2").createdAt(LocalDateTime.now()).build();
     private final ObjectMapper mapper = new ObjectMapper();
     @Autowired
     MockMvc mockMvc;

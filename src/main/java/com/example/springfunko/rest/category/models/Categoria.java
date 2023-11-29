@@ -22,11 +22,11 @@ public class Categoria {
     @Column(nullable = false, unique = true)
     String name;
 
-    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
     @Builder.Default
     LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(updatable = true, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    @Column(updatable = true, nullable = false, columnDefinition = "TIMESTAMP")
     @Builder.Default
     LocalDateTime updatedAt = LocalDateTime.now();
 

@@ -1,7 +1,4 @@
-# Lo necesario para ejecutar la aplicación en local
 services:
-
-  # PostgresSQL
   postgres-db:
     container_name: funko-db_postgres
     image: postgres:12-alpine
@@ -18,7 +15,6 @@ services:
     networks:
       - funko-network
 
-  # MongoDB
   mongo-db:
     container_name: funko-db_mongo
     image: mongo:5.0
@@ -35,29 +31,6 @@ services:
     networks:
       - funko-network
 
-  # Servicio de la API REST
-  springfunko:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: springfunko
-    restart: always
-    env_file: .env
-    ports:
-      - ${API_PORT}:3000
-    volumes:
-      - storage-dir:/app/storage-dir
-    networks:
-      - funko-network
-    depends_on:
-      - postgres-db
-      - mongo-db
-
-# Volume para guardar los datos de la api rest, como las imágenes
-volumes:
-  storage-dir:
-
-# Red para conectar los contenedores (opcional)
 networks:
   funko-network:
     driver: bridge

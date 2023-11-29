@@ -1,0 +1,22 @@
+services:
+
+  springfunko:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: springfunko
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - ${API_PORT}:3000
+    volumes:
+      - storage-dir:/app/storage-dir
+    networks:
+      - funko-network
+
+volumes:
+  storage-dir:
+
+networks:
+  funko-network:
+    driver: bridge

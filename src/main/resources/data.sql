@@ -1,34 +1,34 @@
-INSERT into category (name)
-VALUES ('Serie');
-INSERT into category (name)
-VALUES ('Disney');
-INSERT into category (name)
-VALUES ('Superheroes');
-INSERT into category (name)
-VALUES ('Película');
-INSERT into category (name)
-VALUES ('Otros');
+INSERT into category (name, created_at, updated_at)
+VALUES ('Serie', now(), now());
+INSERT into category (name, created_at, updated_at)
+VALUES ('Disney', now(), now());
+INSERT into category (name, created_at, updated_at)
+VALUES ('Superheroes', now(), now());
+INSERT into category (name, created_at, updated_at)
+VALUES ('Película', now(), now());
+INSERT into category (name, created_at, updated_at)
+VALUES ('Otros', now(), now());
 
-INSERT INTO funko (nombre, precio, cantidad, imagen, category_id)
-VALUES ('Superman Funko Pop', 19.99, 50, 'https://localhost:8080/api/storage/superman.jpg', 3);
+INSERT INTO funko (nombre, precio, cantidad, imagen, category_id, fecha_creacion, fecha_actualizacion)
+VALUES ('Superman Funko Pop', 19.99, 50, 'https://localhost:8080/api/storage/superman.jpg', 3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
-INSERT INTO funko (nombre, precio, cantidad, imagen, category_id)
-VALUES ('Batman Funko Pop', 15.99, 40, 'https://localhost:8080/api/storage/batman.jpg', 3);
+INSERT INTO funko (nombre, precio, cantidad, imagen, category_id, fecha_creacion, fecha_actualizacion)
+VALUES ('Batman Funko Pop', 15.99, 40, 'https://localhost:8080/api/storage/batman.jpg', 3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
-INSERT INTO funko (nombre, precio, cantidad, imagen, category_id)
-VALUES ('Darth Vader Funko Pop', 21.99, 30, 'https://localhost:8080/api/storage/darth_vader.jpg', 5);
+INSERT INTO funko (nombre, precio, cantidad, imagen, category_id, fecha_creacion, fecha_actualizacion)
+VALUES ('Darth Vader Funko Pop', 21.99, 30, 'https://localhost:8080/api/storage/darth_vader.jpg', 5, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
-INSERT INTO funko (nombre, precio, cantidad, imagen, category_id)
-VALUES ('Harry Potter Funko Pop', 14.99, 60, 'https://localhost:8080/api/storage/harry_potter.jpg', 4);
+INSERT INTO funko (nombre, precio, cantidad, imagen, category_id, fecha_creacion, fecha_actualizacion)
+VALUES ('Harry Potter Funko Pop', 14.99, 60, 'https://localhost:8080/api/storage/harry_potter.jpg', 4, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
-INSERT INTO funko (nombre, precio, cantidad, imagen, category_id)
-VALUES ('Stranger Things Funko Pop', 18.99, 35, 'https://localhost:8080/api/storage/stranger_things.jpg', 1);
+INSERT INTO funko (nombre, precio, cantidad, imagen, category_id, fecha_creacion, fecha_actualizacion)
+VALUES ('Stranger Things Funko Pop', 18.99, 35, 'https://localhost:8080/api/storage/stranger_things.jpg', 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
-INSERT INTO funko (nombre, precio, cantidad, imagen, category_id)
-VALUES ('Mickey Mouse Funko Pop', 12.99, 55, 'https://localhost:8080/api/storage/mickey_mouse.jpg', 2);
+INSERT INTO funko (nombre, precio, cantidad, imagen, category_id, fecha_creacion, fecha_actualizacion)
+VALUES ('Mickey Mouse Funko Pop', 12.99, 55, 'https://localhost:8080/api/storage/mickey_mouse.jpg', 2, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
-INSERT INTO funko (nombre, precio, cantidad, imagen, category_id)
-VALUES ('Wonder Woman Funko Pop', 17.99, 45, 'https://localhost:8080/api/storage/wonder_woman.jpg', 3);
+INSERT INTO funko (nombre, precio, cantidad, imagen, category_id, fecha_creacion, fecha_actualizacion)
+VALUES ('Wonder Woman Funko Pop', 17.99, 45, 'https://localhost:8080/api/storage/wonder_woman.jpg', 3, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
 
 -- Contraseña: Admin1
 INSERT INTO USERS (name, surnames, username, email, password)
